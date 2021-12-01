@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/GB_Android/Android/doNotes/app/src/main/res/drawable/background_shadow.xml" value="0.2564814814814815" />
+        <entry key="..\:/GB_Android/Android/doNotes/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.24479166666666666" />
+        <entry key="..\:/GB_Android/Android/doNotes/app/src/main/res/drawable/ic_baseline_sticky_note_2_24.xml" value="0.2703125" />
+        <entry key="..\:/GB_Android/Android/doNotes/app/src/main/res/drawable/note_title_separator.xml" value="0.2703125" />
+        <entry key="..\:/GB_Android/Android/doNotes/app/src/main/res/drawable/separator.xml" value="0.2703125" />
+        <entry key="..\:/GB_Android/Android/doNotes/app/src/main/res/drawable/shadow.xml" value="0.2703125" />
+        <entry key="..\:/GB_Android/Android/doNotes/app/src/main/res/layout-land/activity_main.xml" value="0.1" />
+        <entry key="..\:/GB_Android/Android/doNotes/app/src/main/res/layout/activity_main.xml" value="0.11018518518518519" />
+        <entry key="..\:/GB_Android/Android/doNotes/app/src/main/res/layout/activity_note_content.xml" value="0.25416666666666665" />
+        <entry key="..\:/GB_Android/Android/doNotes/app/src/main/res/layout/fragment_notes_content.xml" value="0.264" />
+        <entry key="..\:/GB_Android/Android/doNotes/app/src/main/res/layout/fragment_notes_list.xml" value="0.2" />
+        <entry key="..\:/GB_Android/Android/doNotes/app/src/main/res/layout/item_note.xml" value="0.264" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

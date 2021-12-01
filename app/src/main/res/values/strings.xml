@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">doNotes</string>
+    <string name="note_1_content">note_1, note_1, note_1, note_1, note_1, note_1, note_1, note_1, я все равно не понимаю, как это работет, note_1, note_1, note_1, note_1, note_1, note_1, note_1, note_1, note_1, note_1, note_1, note_1, note_1, note_1, note_1, note_1, note_1, note_1, note_1, note_1</string>
+    <string name="note_2_content">note_2, note_2, note_2, note_2, note_2, note_2, note_2, note_2, я все равно не понимаю, как это работет, note_2, note_2, note_2, note_2, note_2, note_2, note_2, note_2, note_2, note_2, note_2, note_2, note_2, note_2, note_2, note_2, note_2, note_2, note_2, note_2</string>
+    <string name="note_3_content">note_3, note_3, note_3, note_3, note_3, note_3, note_3, note_3, я все равно не понимаю, как это работет, note_3, note_3, note_3, note_3, note_3, note_3, note_3, note_3, note_3, note_3, note_3, note_3, note_3, note_3, note_3, note_3, note_3, note_3, note_3, note_3</string>
+    <string name="note_4_content">note_4, note_4, note_4, note_4, note_4, note_4, note_4, note_4, я все равно не понимаю, как это работет, note_4, note_4, note_4, note_4, note_4, note_4, note_4, note_4, note_4, note_4, note_4, note_4, note_4, note_4, note_4, note_4, note_4, note_4, note_4, note_4</string>
+    <string name="note_5_content">note_5, note_5, note_5, note_5, note_5, note_5, note_5, note_5, я все равно не понимаю, как это работет, note_5, note_5, note_5, note_5, note_5, note_5, note_5, note_5, note_5, note_5, note_5, note_5, note_5, note_5, note_5, note_5, note_5, note_5, note_5, note_5</string>
+    <string name="note_1_title">Note 1</string>
+    <string name="note_2_title">Note 2</string>
+    <string name="note_3_title">Note 3</string>
+    <string name="note_4_title">Note 4</string>
+    <string name="note_5_title">Note 5</string>
+    <string name="note_1_create_date">01.01.2021</string>
+    <string name="note_2_create_date">02.01.2021</string>
+    <string name="note_3_create_date">03.01.2021</string>
+    <string name="note_4_create_date">04.01.2021</string>
+    <string name="note_5_create_date">02.01.2021</string>
+    <string name="created">created:</string>
 </resources>
