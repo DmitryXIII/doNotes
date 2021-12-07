@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/shadow_23139"
-    android:layout_margin="30dp"
     android:orientation="vertical"
     android:padding="@dimen/note_bg_padding">
 
@@ -57,7 +55,7 @@
         android:layout_gravity="center"
         android:layout_marginVertical="@dimen/dim_16dp"
         android:autoSizeTextType="uniform"
-        android:textColor="@color/black"
+        android:textColor="@android:color/darker_gray"
         android:textSize="@dimen/note_content_text_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
