@@ -13,12 +13,12 @@
         android:layout_width="@dimen/zero_value"
         android:layout_height="@dimen/zero_value"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fragment_content_container"
+        app:layout_constraintEnd_toStartOf="@id/fragment_content_container_land"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_content_container"
+        android:id="@+id/fragment_content_container_land"
         android:layout_width="@dimen/zero_value"
         android:layout_height="@dimen/zero_value"
         app:layout_constraintBottom_toBottomOf="parent"

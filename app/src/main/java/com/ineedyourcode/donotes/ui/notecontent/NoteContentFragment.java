@@ -1,9 +1,11 @@
 package com.ineedyourcode.donotes.ui.notecontent;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,6 +13,8 @@ import androidx.fragment.app.Fragment;
 
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
+import com.ineedyourcode.donotes.ui.MainActivity;
+import com.ineedyourcode.donotes.ui.list.NotesListFragment;
 
 public class NoteContentFragment extends Fragment {
 
@@ -36,6 +40,7 @@ public class NoteContentFragment extends Fragment {
         TextView noteTitle = view.findViewById(R.id.txt_note_title);
         TextView noteContent = view.findViewById(R.id.txt_note_content);
         ImageView close = view.findViewById(R.id.close_icon);
+        ImageView edit = view.findViewById(R.id.edit_icon);
 
         noteTitle.setText(note.getNoteTitle());
         noteContent.setText(note.getNoteContent());
@@ -44,6 +49,14 @@ public class NoteContentFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
+                MainActivity.setSelectedNote();
+            }
+        });
+
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(requireContext(), "Edit note", Toast.LENGTH_SHORT).show();
             }
         });
     }

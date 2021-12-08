@@ -4,29 +4,34 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentResultListener;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.ui.list.NotesListFragment;
-import com.ineedyourcode.donotes.ui.notecontent.NoteContentActivity;
 import com.ineedyourcode.donotes.ui.notecontent.NoteContentFragment;
 
 public class MainActivity extends AppCompatActivity {
     private static String ARG_NOTE = "ARG_NOTE";
-    private Note selectedNote;
+    private static Note selectedNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, new NotesListFragment())
+                    .commit();
+        }
+
         if (savedInstanceState != null && savedInstanceState.containsKey(ARG_NOTE)) {
             selectedNote = savedInstanceState.getParcelable(ARG_NOTE);
 
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE && selectedNote != null) {
                 showNoteContent();
             }
         }
@@ -40,9 +45,11 @@ public class MainActivity extends AppCompatActivity {
                         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                             showNoteContent();
                         } else {
-                            Intent intent = new Intent(MainActivity.this, NoteContentActivity.class);
-                            intent.putExtra(NoteContentActivity.EXTRA_NOTE, selectedNote);
-                            startActivity(intent);
+                            getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragment_container, NoteContentFragment.newInstance(selectedNote))
+                                    .addToBackStack("")
+                                    .commit();
                         }
                     }
                 });
@@ -59,7 +66,12 @@ public class MainActivity extends AppCompatActivity {
     private void showNoteContent() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_content_container, NoteContentFragment.newInstance(selectedNote))
+                .replace(R.id.fragment_content_container_land, NoteContentFragment.newInstance(selectedNote))
+                .addToBackStack("")
                 .commit();
+    }
+
+    public static void setSelectedNote() {
+        MainActivity.selectedNote = null;
     }
 }
