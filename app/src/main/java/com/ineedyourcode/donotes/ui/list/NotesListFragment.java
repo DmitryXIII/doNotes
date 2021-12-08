@@ -12,10 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.NotesRepositoryBuffer;
+import com.ineedyourcode.donotes.ui.MainActivity;
 
 import java.util.List;
 
@@ -43,15 +45,35 @@ public class NotesListFragment extends Fragment implements NotesListView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        FloatingActionButton fabNew = view.findViewById(R.id.fab_add_new_note);
-        fabNew.setOnClickListener(new View.OnClickListener() {
+        notesContainer = view.findViewById(R.id.notes_container);
+
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(requireContext(), "Add new note", Toast.LENGTH_SHORT).show();
             }
         });
 
-        notesContainer = view.findViewById(R.id.notes_container);
+        BottomAppBar bar = view.findViewById(R.id.bar);
+        bar.replaceMenu(R.menu.menu_bottom_bar_note_list);
+        ((MainActivity) requireActivity()).setToolbar(bar);
+
+        bar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menu_item_sync_notes_list:
+                    Toast.makeText(requireContext(), "Sync notes list", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.menu_item_search:
+                    Toast.makeText(requireContext(), "Note searching", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.menu_item_exit_app:
+                    requireActivity().finish();
+                    return true;
+            }
+            return false;
+        });
 
         presenter.updateNotesList();
     }

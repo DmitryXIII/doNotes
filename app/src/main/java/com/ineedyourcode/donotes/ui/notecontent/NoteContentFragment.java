@@ -1,6 +1,5 @@
 package com.ineedyourcode.donotes.ui.notecontent;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,10 +10,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.ui.MainActivity;
-import com.ineedyourcode.donotes.ui.list.NotesListFragment;
 
 public class NoteContentFragment extends Fragment {
 
@@ -37,27 +37,36 @@ public class NoteContentFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Note note = requireArguments().getParcelable(ARG_NOTE);
 
+        BottomAppBar bar = view.findViewById(R.id.bar);
+        ((MainActivity) requireActivity()).setToolbar(bar);
+        bar.replaceMenu(R.menu.menu_bottom_bar_note_content);
+        bar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menu_item_share_note:
+                    Toast.makeText(requireContext(), "Share this note", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.menu_item_attach_image:
+                    Toast.makeText(requireContext(), "Go to gallery to attach some image", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.menu_item_delete_note:
+                    Toast.makeText(requireContext(), "Delete this note", Toast.LENGTH_SHORT).show();
+                    return true;
+            }
+            return false;
+        });
+
         TextView noteTitle = view.findViewById(R.id.txt_note_title);
         TextView noteContent = view.findViewById(R.id.txt_note_content);
         ImageView close = view.findViewById(R.id.close_icon);
-        ImageView edit = view.findViewById(R.id.edit_icon);
-
+        FloatingActionButton fab = view.findViewById(R.id.fab);
         noteTitle.setText(note.getNoteTitle());
         noteContent.setText(note.getNoteContent());
 
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-                MainActivity.setSelectedNote();
-            }
-        });
+        fab.setOnClickListener(v -> Toast.makeText(requireContext(), "Edit note content", Toast.LENGTH_SHORT).show());
 
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(requireContext(), "Edit note", Toast.LENGTH_SHORT).show();
-            }
+        close.setOnClickListener(v -> {
+            ((MainActivity) requireActivity()).setSelectedNoteToNull();
+            requireActivity().onBackPressed();
         });
     }
 }
