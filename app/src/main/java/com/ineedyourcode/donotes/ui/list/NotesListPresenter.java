@@ -1,5 +1,7 @@
 package com.ineedyourcode.donotes.ui.list;
 
+import android.content.Context;
+
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.NotesRepository;
 
@@ -16,8 +18,8 @@ public class NotesListPresenter {
         this.repository = repository;
     }
 
-    public void updateNotesList () {
-       List<Note> updatedNotesList = repository.getNotes();
+    public void updateNotesList (Context context) {
+       List<Note> updatedNotesList = repository.getNotes(context);
 
         view.showNotes(updatedNotesList);
     }

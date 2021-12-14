@@ -1,4 +1,11 @@
 package com.ineedyourcode.donotes.ui;
+/*TODO:
+    - исправить привязку к активити в боттомбарах
+    - кастомный диалог (в стиле приложения) при выходе из списка заметок
+    - тосты заменить на снэкбары
+    - кастомный диалог (в стиле приложения) удалении заметки
+  */
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -7,6 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.res.Configuration;
@@ -15,6 +23,7 @@ import android.os.Bundle;
 import com.google.android.material.navigation.NavigationView;
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
+import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
 import com.ineedyourcode.donotes.ui.navdrawer.AboutAppFragment;
 import com.ineedyourcode.donotes.ui.navdrawer.SettingsFragment;
 import com.ineedyourcode.donotes.ui.list.NotesListFragment;
