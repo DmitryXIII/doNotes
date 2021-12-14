@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/padding_5dp"
-        android:background="@drawable/shadow_23139"
         android:padding="@dimen/padding_10dp">
 
         <ImageView
@@ -31,45 +30,34 @@
             android:layout_marginHorizontal="@dimen/dim_16dp"
             android:textColor="@color/note_title"
             android:textSize="@dimen/note_title_size"
-            app:layout_constraintBottom_toTopOf="@id/separator"
+            app:layout_constraintBottom_toTopOf="@id/title_create_date"
             app:layout_constraintStart_toEndOf="@id/note_icon"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/note_icon"
             tools:text="Заголовок заметки" />
-
-        <View
-            android:id="@+id/separator"
-            android:layout_width="@dimen/zero_value"
-            android:layout_height="@dimen/separator_height"
-            android:layout_marginVertical="@dimen/padding_5dp"
-            android:background="@drawable/separator"
-            app:layout_constraintBottom_toBottomOf="@id/note_icon"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/note_title"
-            app:layout_constraintTop_toTopOf="@id/note_icon" />
 
         <TextView
             android:id="@+id/title_create_date"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/zero_value"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/created"
             android:textColor="@android:color/darker_gray"
             android:textSize="@dimen/create_date_size"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/note_icon"
             app:layout_constraintStart_toStartOf="@id/note_title"
-            app:layout_constraintTop_toBottomOf="@id/separator" />
+            app:layout_constraintTop_toBottomOf="@id/note_title" />
 
         <TextView
             android:id="@+id/note_create_date"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/zero_value"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/padding_5dp"
             android:gravity="center"
             android:textColor="@android:color/darker_gray"
             android:textSize="@dimen/create_date_size"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/title_create_date"
             app:layout_constraintStart_toEndOf="@id/title_create_date"
-            app:layout_constraintTop_toBottomOf="@id/separator"
+            app:layout_constraintTop_toBottomOf="@id/note_title"
             tools:text="dd.mm.yyyy" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

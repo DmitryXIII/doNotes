@@ -8,7 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="light_yellow">#FFE082</color>
-    <color name="note_title">#BF360C</color>
-    <color name="separator">#4A9A4E</color>
-    <color name="colorControlHighlight">#6036B832</color>
+    <color name="note_title">#E6FF8F</color>
+    <color name="separator">#405140</color>
+    <color name="colorControlHighlight">#B89B32</color>
+    <color name="background_dark">#1E2027</color>
+    <color name="text_color">#878787</color>
+
 </resources>

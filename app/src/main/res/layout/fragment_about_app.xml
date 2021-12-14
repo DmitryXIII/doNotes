@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".ui.navdrawer.AboutAppFragment">
+
+    <TextView
+        android:id="@+id/text_about"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/about"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/darker_gray" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_github"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/padding_5dp"
+        android:text="@string/go_to_github"
+        android:textAllCaps="false"
+        android:textColor="@color/note_title"
+        app:rippleColor="@color/note_title"
+        app:strokeColor="@color/note_title" />
+
+</LinearLayout>
