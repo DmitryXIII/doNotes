@@ -17,6 +17,7 @@ import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.ui.MainActivity;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
+import com.ineedyourcode.donotes.ui.dialogalert.BottomDialogFragment;
 
 public class NoteContentFragment extends Fragment {
     private static final String ARG_NOTE = "ARG_NOTE";
@@ -41,17 +42,32 @@ public class NoteContentFragment extends Fragment {
                 .setFragmentResultListener(AlertDialogFragment.KEY_RESULT, this, new FragmentResultListener() {
                     @Override
                     public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                        AlertDialogFragment adf = (AlertDialogFragment) getParentFragmentManager().findFragmentByTag("AlertDialogFragment");
-                        switch (result.getInt(AlertDialogFragment.ARG_BUTTON)) {
-                            case R.id.btn_dialog_ok:
-                                Toast.makeText(requireContext(), "Note deleted", Toast.LENGTH_SHORT).show();
-                                adf.dismiss();
-                                break;
+                        if (getParentFragmentManager().findFragmentByTag("AlertDialogFragment") != null) {
+                            AlertDialogFragment adf = (AlertDialogFragment) getParentFragmentManager().findFragmentByTag("AlertDialogFragment");
+                            switch (result.getInt(AlertDialogFragment.ARG_BUTTON)) {
+                                case R.id.btn_dialog_ok:
+                                    Toast.makeText(requireContext(), "Note deleted", Toast.LENGTH_SHORT).show();
+                                    adf.dismiss();
+                                    break;
 
-                            case R.id.btn_dialog_cancel:
-                                Toast.makeText(requireContext(), "\"Cancel\" pressed", Toast.LENGTH_SHORT).show();
-                                adf.dismiss();
-                                break;
+                                case R.id.btn_dialog_cancel:
+                                    Toast.makeText(requireContext(), "\"Cancel\" pressed", Toast.LENGTH_SHORT).show();
+                                    adf.dismiss();
+                                    break;
+                            }
+                        } else {
+                            BottomDialogFragment bdf = (BottomDialogFragment) getParentFragmentManager().findFragmentByTag("BottomDialogFragment");
+                            switch (result.getInt(AlertDialogFragment.ARG_BUTTON)) {
+                                case R.id.btn_dialog_ok:
+                                    Toast.makeText(requireContext(), "Attach file", Toast.LENGTH_SHORT).show();
+                                    bdf.dismiss();
+                                    break;
+
+                                case R.id.btn_dialog_cancel:
+                                    Toast.makeText(requireContext(), "\"Cancel\" pressed", Toast.LENGTH_SHORT).show();
+                                    bdf.dismiss();
+                                    break;
+                            }
                         }
                     }
                 });
@@ -68,7 +84,7 @@ public class NoteContentFragment extends Fragment {
                     return true;
 
                 case R.id.menu_item_attach_image:
-                    Toast.makeText(requireContext(), "Attach file", Toast.LENGTH_SHORT).show();
+                    showBottomDialog("Some options to attach file");
                     return true;
 
                 case R.id.menu_item_delete_note:
@@ -97,6 +113,13 @@ public class NoteContentFragment extends Fragment {
         if (getParentFragmentManager().findFragmentByTag("AlertDialogFragment") == null) {
             AlertDialogFragment.newInstance(message)
                     .show(getParentFragmentManager(), "AlertDialogFragment");
+        }
+    }
+
+    private void showBottomDialog(String message) {
+        if (getParentFragmentManager().findFragmentByTag("BottomDialogFragment") == null) {
+            BottomDialogFragment.newInstance(message)
+                    .show(getParentFragmentManager(), "BottomDialogFragment");
         }
     }
 }

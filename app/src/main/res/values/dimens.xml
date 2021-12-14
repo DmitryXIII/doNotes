@@ -13,4 +13,6 @@
     <dimen name="create_date_size">16sp</dimen>
     <dimen name="padding_10dp">10dp</dimen>
     <dimen name="fab_cradle_radius">24dp</dimen>
+    <dimen name="text_size_20">20sp</dimen>
+    <dimen name="bottom_sheet_height">200dp</dimen>
 </resources>

@@ -33,4 +33,5 @@
     <string name="ok">ok</string>
     <string name="no">no</string>
     <string name="cancel">CANCEL</string>
+    <string name="some_options_to_attach_file">Some options to attach file</string>
 </resources>
