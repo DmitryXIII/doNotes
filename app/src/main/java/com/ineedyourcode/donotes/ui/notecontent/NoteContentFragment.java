@@ -1,5 +1,6 @@
 package com.ineedyourcode.donotes.ui.notecontent;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.ui.MainActivity;
+import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
 import com.ineedyourcode.donotes.ui.dialogalert.BottomDialogFragment;
 
@@ -75,7 +77,12 @@ public class NoteContentFragment extends Fragment {
         Note note = requireArguments().getParcelable(ARG_NOTE);
 
         BottomAppBar bar = view.findViewById(R.id.bar);
-        ((MainActivity) requireActivity()).setToolbar(bar);
+
+        Activity activity = requireActivity();
+        if (activity instanceof ToolbarSetter) {
+            ((ToolbarSetter) activity).setToolbar(bar);
+        }
+
         bar.replaceMenu(R.menu.menu_bottom_bar_note_content);
         bar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {

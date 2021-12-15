@@ -1,5 +1,8 @@
 package com.ineedyourcode.donotes.ui.list;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +18,13 @@ import androidx.fragment.app.FragmentResultListener;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.NotesRepositoryBuffer;
 import com.ineedyourcode.donotes.ui.MainActivity;
+import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
 
 import java.util.List;
@@ -80,12 +86,19 @@ public class NotesListFragment extends Fragment implements NotesListView {
 
         BottomAppBar bar = view.findViewById(R.id.bar);
         bar.replaceMenu(R.menu.menu_bottom_bar_note_list);
-        ((MainActivity) requireActivity()).setToolbar(bar);
+
+        Activity activity = requireActivity();
+        if (activity instanceof ToolbarSetter) {
+            ((ToolbarSetter) activity).setToolbar(bar);
+        }
 
         bar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menu_item_sync_notes_list:
-                    Toast.makeText(requireContext(), "Sync notes", Toast.LENGTH_SHORT).show();
+                    Snackbar snackbar = Snackbar.make(view, R.string.snack_sync_notes, Snackbar.LENGTH_SHORT);
+                    snackbar.getView().setBackgroundColor(requireContext().getColor(R.color.note_title));
+                    snackbar.setTextColor(requireContext().getColor(R.color.background_dark));
+                    snackbar.show();
                     return true;
 
                 case R.id.menu_item_search:

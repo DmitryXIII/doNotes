@@ -34,4 +34,5 @@
     <string name="no">no</string>
     <string name="cancel">CANCEL</string>
     <string name="some_options_to_attach_file">Some options to attach file</string>
+    <string name="snack_sync_notes">Sync notes</string>
 </resources>
