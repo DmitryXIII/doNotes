@@ -1,8 +1,6 @@
 package com.ineedyourcode.donotes.ui.list;
 
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +16,10 @@ import androidx.fragment.app.FragmentResultListener;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.NotesRepositoryBuffer;
-import com.ineedyourcode.donotes.ui.MainActivity;
 import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
 
@@ -57,18 +53,9 @@ public class NotesListFragment extends Fragment implements NotesListView {
                 .setFragmentResultListener(AlertDialogFragment.KEY_RESULT, this, new FragmentResultListener() {
                     @Override
                     public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                        AlertDialogFragment adf = (AlertDialogFragment)getParentFragmentManager().findFragmentByTag("AlertDialogFragment");
-                        switch (result.getInt(AlertDialogFragment.ARG_BUTTON)) {
-                            case R.id.btn_dialog_ok:
-                                requireActivity().finish();
-                                Toast.makeText(requireContext(), "EXIT APP", Toast.LENGTH_SHORT).show();
-                                adf.dismiss();
-                                break;
-                            case R.id.btn_dialog_cancel:
-                                Toast.makeText(requireContext(), "\"Cancel\" pressed", Toast.LENGTH_SHORT).show();
-                                adf = (AlertDialogFragment)getParentFragmentManager().findFragmentByTag("AlertDialogFragment");
-                                adf.dismiss();
-                                break;
+                        if (result.getInt(AlertDialogFragment.ARG_BUTTON) == R.id.btn_dialog_ok) {
+                            requireActivity().finish();
+                            Toast.makeText(requireContext(), getString(R.string.exit_message), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -80,7 +67,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(requireContext(), "Add new note", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), getString(R.string.fab_new_note_message), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -102,11 +89,11 @@ public class NotesListFragment extends Fragment implements NotesListView {
                     return true;
 
                 case R.id.menu_item_search:
-                    Toast.makeText(requireContext(), "Search notes", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.search_notes_message), Toast.LENGTH_SHORT).show();
                     return true;
 
                 case R.id.menu_item_exit_app:
-                    showAlertFragmentDialog("Exit app?");
+                    showAlertFragmentDialog(getString(R.string.alert_dialog_exit_message));
                     return true;
             }
             return false;
@@ -144,6 +131,6 @@ public class NotesListFragment extends Fragment implements NotesListView {
 
     private void showAlertFragmentDialog(String message) {
         AlertDialogFragment.newInstance(message)
-                .show(getParentFragmentManager(), "AlertDialogFragment");
+                .show(getParentFragmentManager(), AlertDialogFragment.getTAG());
     }
 }

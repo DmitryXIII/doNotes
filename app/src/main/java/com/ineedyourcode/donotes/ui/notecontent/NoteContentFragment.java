@@ -40,40 +40,6 @@ public class NoteContentFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getParentFragmentManager()
-                .setFragmentResultListener(AlertDialogFragment.KEY_RESULT, this, new FragmentResultListener() {
-                    @Override
-                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                        if (getParentFragmentManager().findFragmentByTag("AlertDialogFragment") != null) {
-                            AlertDialogFragment adf = (AlertDialogFragment) getParentFragmentManager().findFragmentByTag("AlertDialogFragment");
-                            switch (result.getInt(AlertDialogFragment.ARG_BUTTON)) {
-                                case R.id.btn_dialog_ok:
-                                    Toast.makeText(requireContext(), "Note deleted", Toast.LENGTH_SHORT).show();
-                                    adf.dismiss();
-                                    break;
-
-                                case R.id.btn_dialog_cancel:
-                                    Toast.makeText(requireContext(), "\"Cancel\" pressed", Toast.LENGTH_SHORT).show();
-                                    adf.dismiss();
-                                    break;
-                            }
-                        } else {
-                            BottomDialogFragment bdf = (BottomDialogFragment) getParentFragmentManager().findFragmentByTag("BottomDialogFragment");
-                            switch (result.getInt(AlertDialogFragment.ARG_BUTTON)) {
-                                case R.id.btn_dialog_ok:
-                                    Toast.makeText(requireContext(), "Attach file", Toast.LENGTH_SHORT).show();
-                                    bdf.dismiss();
-                                    break;
-
-                                case R.id.btn_dialog_cancel:
-                                    Toast.makeText(requireContext(), "\"Cancel\" pressed", Toast.LENGTH_SHORT).show();
-                                    bdf.dismiss();
-                                    break;
-                            }
-                        }
-                    }
-                });
-
         Note note = requireArguments().getParcelable(ARG_NOTE);
 
         BottomAppBar bar = view.findViewById(R.id.bar);
@@ -87,15 +53,15 @@ public class NoteContentFragment extends Fragment {
         bar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menu_item_share_note:
-                    Toast.makeText(requireContext(), "Share this note", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.share_note_massage), Toast.LENGTH_SHORT).show();
                     return true;
 
                 case R.id.menu_item_attach_image:
-                    showBottomDialog("Some options to attach file");
+                    showBottomDialog(getString(R.string.bottomsheet_attach_message));
                     return true;
 
                 case R.id.menu_item_delete_note:
-                    showAlertFragmentDialog("Delete this note?");
+                    showAlertFragmentDialog(getString(R.string.alert_dialog_delete_message));
                     return true;
             }
             return false;
@@ -108,7 +74,7 @@ public class NoteContentFragment extends Fragment {
         noteTitle.setText(note.getNoteTitle());
         noteContent.setText(note.getNoteContent());
 
-        fab.setOnClickListener(v -> Toast.makeText(requireContext(), "Edit note content", Toast.LENGTH_SHORT).show());
+        fab.setOnClickListener(v -> Toast.makeText(requireContext(), getString(R.string.fab_edit_message), Toast.LENGTH_SHORT).show());
 
         close.setOnClickListener(v -> {
             ((MainActivity) requireActivity()).setSelectedNoteToNull();
@@ -117,16 +83,32 @@ public class NoteContentFragment extends Fragment {
     }
 
     private void showAlertFragmentDialog(String message) {
-        if (getParentFragmentManager().findFragmentByTag("AlertDialogFragment") == null) {
+        setDialogListener(AlertDialogFragment.KEY_RESULT, AlertDialogFragment.ARG_BUTTON, getString(R.string.note_deleted_message));
+
+        if (getParentFragmentManager().findFragmentByTag(AlertDialogFragment.getTAG()) == null) {
             AlertDialogFragment.newInstance(message)
-                    .show(getParentFragmentManager(), "AlertDialogFragment");
+                    .show(getParentFragmentManager(), AlertDialogFragment.getTAG());
         }
     }
 
     private void showBottomDialog(String message) {
-        if (getParentFragmentManager().findFragmentByTag("BottomDialogFragment") == null) {
+        setDialogListener(BottomDialogFragment.KEY_RESULT, BottomDialogFragment.ARG_BUTTON, getString(R.string.attach_message));
+
+        if (getParentFragmentManager().findFragmentByTag(BottomDialogFragment.getTAG()) == null) {
             BottomDialogFragment.newInstance(message)
-                    .show(getParentFragmentManager(), "BottomDialogFragment");
+                    .show(getParentFragmentManager(), BottomDialogFragment.getTAG());
         }
+    }
+
+    private void setDialogListener(String keyResult, String argument, String message) {
+        getParentFragmentManager()
+                .setFragmentResultListener(keyResult, this, new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                        if (result.getInt(argument) == R.id.btn_dialog_ok) {
+                            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }

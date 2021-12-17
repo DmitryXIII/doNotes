@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ public class BottomDialogFragment extends BottomSheetDialogFragment {
     public static final String KEY_RESULT = "AlertDialogFragment";
     public static final String ARG_BUTTON = "ARG_BUTTON";
 
+    private static final String TAG = "BottomDialogFragment";
     private static final String ARG_MESSAGE = "ARG_MESSAGE";
 
     public static BottomDialogFragment newInstance(String message) {
@@ -44,21 +46,23 @@ public class BottomDialogFragment extends BottomSheetDialogFragment {
 
                 getParentFragmentManager()
                         .setFragmentResult(KEY_RESULT, bundle);
+                dismiss();
             }
         });
 
         view.findViewById(R.id.btn_dialog_cancel).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putInt(ARG_BUTTON, v.getId());
-
-                getParentFragmentManager()
-                        .setFragmentResult(KEY_RESULT, bundle);
+                Toast.makeText(requireContext(), getString(R.string.button_cancel_message), Toast.LENGTH_SHORT).show();
+                dismiss();
             }
         });
 
         TextView dialogMessage = view.findViewById(R.id.dialog_message);
         dialogMessage.setText(requireArguments().getString(ARG_MESSAGE));
+    }
+
+    public static String getTAG() {
+        return TAG;
     }
 }

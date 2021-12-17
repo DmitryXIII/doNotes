@@ -35,4 +35,15 @@
     <string name="cancel">CANCEL</string>
     <string name="some_options_to_attach_file">Some options to attach file</string>
     <string name="snack_sync_notes">Sync notes</string>
+    <string name="button_cancel_message">\"Cancel\" pressed</string>
+    <string name="note_deleted_message">Note deleted</string>
+    <string name="attach_message">Attach file</string>
+    <string name="share_note_massage">Share this note</string>
+    <string name="bottomsheet_attach_message">Some options to attach file</string>
+    <string name="alert_dialog_delete_message">Delete this note?</string>
+    <string name="fab_edit_message">Edit note content</string>
+    <string name="exit_message">EXIT APP</string>
+    <string name="fab_new_note_message">Add new note</string>
+    <string name="search_notes_message">Search notes</string>
+    <string name="alert_dialog_exit_message">Exit app?</string>
 </resources>
