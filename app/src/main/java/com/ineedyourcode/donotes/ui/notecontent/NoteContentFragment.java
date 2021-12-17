@@ -1,8 +1,10 @@
 package com.ineedyourcode.donotes.ui.notecontent;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -77,6 +79,9 @@ public class NoteContentFragment extends Fragment {
         fab.setOnClickListener(v -> Toast.makeText(requireContext(), getString(R.string.fab_edit_message), Toast.LENGTH_SHORT).show());
 
         close.setOnClickListener(v -> {
+            hideKeyboardFrom(requireContext(), noteTitle);
+            hideKeyboardFrom(requireContext(), noteContent);
+
             ((MainActivity) requireActivity()).setSelectedNoteToNull();
             requireActivity().onBackPressed();
         });
@@ -110,5 +115,10 @@ public class NoteContentFragment extends Fragment {
                         }
                     }
                 });
+    }
+
+    private void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

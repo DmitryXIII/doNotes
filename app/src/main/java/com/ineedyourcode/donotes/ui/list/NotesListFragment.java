@@ -2,6 +2,8 @@ package com.ineedyourcode.donotes.ui.list;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -29,14 +34,26 @@ public class NotesListFragment extends Fragment implements NotesListView {
     public static String ARG_NOTE = "ARG_NOTE";
     public static String RESULT_KEY = "NotesListFragment_RESULT";
 
-    private LinearLayout notesContainer;
+    private RecyclerView notesContainer;
     private NotesListPresenter presenter;
+    private NotesAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         presenter = new NotesListPresenter(this, new NotesRepositoryBuffer());
+        adapter = new NotesAdapter();
+        adapter.setOnClick(new NotesAdapter.OnClick() {
+            @Override
+            public void onClick(Note note) {
+                Bundle data = new Bundle();
+                data.putParcelable(ARG_NOTE, note);
+
+                getParentFragmentManager()
+                        .setFragmentResult(RESULT_KEY, data);
+            }
+        });
     }
 
     @Nullable
@@ -61,6 +78,8 @@ public class NotesListFragment extends Fragment implements NotesListView {
                 });
 
         notesContainer = view.findViewById(R.id.notes_container);
+        notesContainer.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+        notesContainer.setAdapter(adapter);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
 
@@ -104,29 +123,8 @@ public class NotesListFragment extends Fragment implements NotesListView {
 
     @Override
     public void showNotes(List<Note> notes) {
-        for (Note note : notes) {
-            View itemView = LayoutInflater.from(requireContext()).inflate(R.layout.item_note, notesContainer, false);
-
-            itemView.findViewById(R.id.card).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Bundle data = new Bundle();
-                    data.putParcelable(ARG_NOTE, note);
-
-                    getParentFragmentManager()
-                            .setFragmentResult(RESULT_KEY, data);
-                }
-            });
-
-            TextView noteTitle = itemView.findViewById(R.id.note_title);
-            noteTitle.setText(note.getNoteTitle());
-
-            TextView noteCreateDate = itemView.findViewById(R.id.note_create_date);
-            noteCreateDate.setText(note.getNoteCreateDate());
-
-            notesContainer.addView(itemView);
-        }
+        adapter.setData(notes);
+        adapter.notifyDataSetChanged();
     }
 
     private void showAlertFragmentDialog(String message) {
