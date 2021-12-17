@@ -23,6 +23,4 @@
         android:title="@string/close"
         app:showAsAction="ifRoom" />
 
-
-
 </menu>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/separator"
+    android:padding="@dimen/dim_16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="@dimen/alert_dialog_width"
+        android:layout_height="wrap_content"
+        android:background="@color/separator">
+
+
+        <ImageView
+            android:id="@+id/dialog_icon"
+            android:layout_width="@dimen/alert_icon_width"
+            android:layout_height="@dimen/alert_icon_height"
+            android:src="@drawable/app_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="@dimen/zero_value"
+            android:layout_height="@dimen/separator_height"
+            android:layout_marginTop="@dimen/padding_5dp"
+            android:background="@color/note_title"
+            app:layout_constraintEnd_toEndOf="@id/btn_dialog_ok"
+            app:layout_constraintStart_toStartOf="@id/btn_dialog_cancel"
+            app:layout_constraintTop_toBottomOf="@id/dialog_icon" />
+
+        <TextView
+            android:id="@+id/dialog_message"
+            android:layout_width="@dimen/zero_value"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/dim_16dp"
+            android:layout_marginStart="@dimen/dim_16dp"
+            android:textColor="@color/note_title"
+            android:textSize="@dimen/note_content_text_size"
+            app:layout_constraintBottom_toBottomOf="@id/dialog_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/dialog_icon"
+            app:layout_constraintTop_toTopOf="@id/dialog_icon" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_dialog_ok"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dim_16dp"
+            android:text="OK"
+            android:textColor="@color/note_title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/separator"
+            app:rippleColor="@color/note_title"
+            app:strokeColor="@color/note_title" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_dialog_cancel"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dim_16dp"
+            android:text="@string/cancel"
+            android:textColor="@color/note_title"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/separator"
+            app:rippleColor="@color/note_title"
+            app:strokeColor="@color/note_title" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

@@ -20,7 +20,7 @@ import com.ineedyourcode.donotes.ui.navdrawer.SettingsFragment;
 import com.ineedyourcode.donotes.ui.list.NotesListFragment;
 import com.ineedyourcode.donotes.ui.notecontent.NoteContentFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter {
     private static String ARG_NOTE = "ARG_NOTE";
     private Note selectedNote;
     private DrawerLayout navDrawer;
@@ -91,19 +91,6 @@ public class MainActivity extends AppCompatActivity {
         navDrawer.closeDrawer(GravityCompat.START);
     }
 
-    public void setToolbar(Toolbar toolbar) {
-        if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this,
-                    navDrawer,
-                    toolbar,
-                    R.string.appbar_scrolling_view_behavior,
-                    R.string.appbar_scrolling_view_behavior
-            );
-            navDrawer.addDrawerListener(toggle);
-            toggle.syncState();
-        }
-    }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -124,5 +111,20 @@ public class MainActivity extends AppCompatActivity {
 
     public void setSelectedNoteToNull() {
         selectedNote = null;
+    }
+
+    @Override
+    public void setToolbar(Toolbar toolbar) {
+        if (getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this,
+                    navDrawer,
+                    toolbar,
+                    R.string.appbar_scrolling_view_behavior,
+                    R.string.appbar_scrolling_view_behavior
+            );
+            navDrawer.addDrawerListener(toggle);
+            toggle.syncState();
+        }
     }
 }
