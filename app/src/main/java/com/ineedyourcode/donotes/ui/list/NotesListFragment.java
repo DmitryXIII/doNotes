@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.NotesRepositoryBuffer;
+import com.ineedyourcode.donotes.ui.adapter.AdapterItem;
 import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
 
@@ -126,7 +128,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
     }
 
     @Override
-    public void showNotes(List<Note> notes) {
+    public void showNotes(List<AdapterItem> notes) {
         adapter.setData(notes);
         adapter.notifyDataSetChanged();
     }

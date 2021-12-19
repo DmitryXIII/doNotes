@@ -3,10 +3,18 @@ package com.ineedyourcode.donotes.ui.list;
 import com.ineedyourcode.donotes.domain.Callback;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.NotesRepository;
+import com.ineedyourcode.donotes.ui.adapter.AdapterItem;
+import com.ineedyourcode.donotes.ui.adapter.NoteAdapterItem;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class NotesListPresenter {
+
+    private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
     private NotesListView view;
 
@@ -23,7 +31,12 @@ public class NotesListPresenter {
         repository.getAll(new Callback<List<Note>>() {
             @Override
             public void onSuccess(List<Note> result) {
-                view.showNotes(result);
+                ArrayList<AdapterItem> adapterItems = new ArrayList<>();
+
+                for (Note note: result) {
+                    adapterItems.add(new NoteAdapterItem(note, note.getTitle(), dateFormat.format(note.getCreatedAt()) + " " +  timeFormat.format(note.getCreatedAt())));
+                }
+                view.showNotes(adapterItems);
                 view.hideProgress();
             }
 

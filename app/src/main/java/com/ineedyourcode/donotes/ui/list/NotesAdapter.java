@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
+import com.ineedyourcode.donotes.ui.adapter.AdapterItem;
+import com.ineedyourcode.donotes.ui.adapter.NoteAdapterItem;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,9 +20,7 @@ import java.util.Locale;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
 
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
-
-    private ArrayList<Note> data = new ArrayList<Note>();
+    private ArrayList<AdapterItem> data = new ArrayList<>();
 
     private OnClick onClick;
 
@@ -32,25 +32,25 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         this.onClick = onClick;
     }
 
-    public void setData(Collection<Note> notes) {
+    public void setData(Collection<AdapterItem> notes) {
         data.clear();
         data.addAll(notes);
     }
 
     @NonNull
     @Override
-    public NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public NotesAdapter.NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_note, parent, false);
         return new NoteViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NoteViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull NotesAdapter.NoteViewHolder holder, int position) {
 
-        Note note = data.get(position);
+        NoteAdapterItem note = (NoteAdapterItem)data.get(position);
 
         holder.getNoteTitle().setText(note.getTitle());
-        holder.getDate().setText(dateFormat.format(note.getCreatedAt()));
+        holder.getDate().setText(note.getTime());
     }
 
     @Override
@@ -78,10 +78,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             itemView.findViewById(R.id.card).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Note note = data.get(getAdapterPosition());
+                    AdapterItem item = data.get(getAdapterPosition());
 
-                    if (getOnClick() != null) {
-                        getOnClick().onClick(note);
+                    if (item instanceof NoteAdapterItem) {
+                        if (getOnClick() != null) {
+                            getOnClick().onClick(((NoteAdapterItem) item).getNote());
+                        }
                     }
                 }
             });
