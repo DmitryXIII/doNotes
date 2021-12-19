@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,12 +38,13 @@ public class NotesListFragment extends Fragment implements NotesListView {
     private RecyclerView notesContainer;
     private NotesListPresenter presenter;
     private NotesAdapter adapter;
+    private ProgressBar progressBar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = new NotesListPresenter(this, new NotesRepositoryBuffer());
+        presenter = new NotesListPresenter(this, NotesRepositoryBuffer.INSTANCE);
         adapter = new NotesAdapter();
         adapter.setOnClick(new NotesAdapter.OnClick() {
             @Override
@@ -76,6 +78,8 @@ public class NotesListFragment extends Fragment implements NotesListView {
                         }
                     }
                 });
+
+        progressBar = view.findViewById(R.id.progress_circular);
 
         notesContainer = view.findViewById(R.id.notes_container);
         notesContainer.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
@@ -118,13 +122,23 @@ public class NotesListFragment extends Fragment implements NotesListView {
             return false;
         });
 
-        presenter.updateNotesList(requireContext());
+        presenter.requestNotes();
     }
 
     @Override
     public void showNotes(List<Note> notes) {
         adapter.setData(notes);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
     }
 
     private void showAlertFragmentDialog(String message) {

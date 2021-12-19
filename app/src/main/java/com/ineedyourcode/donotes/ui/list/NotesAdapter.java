@@ -11,10 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Locale;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHolder> {
+
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
 
     private ArrayList<Note> data = new ArrayList<Note>();
 
@@ -45,8 +49,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         Note note = data.get(position);
 
-        holder.getNoteTitle().setText(note.getNoteTitle());
-        holder.getNoteCreateDate().setText(note.getNoteCreateDate());
+        holder.getNoteTitle().setText(note.getTitle());
+        holder.getDate().setText(dateFormat.format(note.getCreatedAt()));
     }
 
     @Override
@@ -62,14 +66,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
 
         private final TextView noteTitle;
 
-        private final TextView noteCreateDate;
+        private final TextView date;
 
         public NoteViewHolder(@NonNull View itemView) {
             super(itemView);
 
             noteTitle = itemView.findViewById(R.id.note_title);
 
-            noteCreateDate = itemView.findViewById(R.id.note_create_date);
+            date = itemView.findViewById(R.id.note_create_date);
 
             itemView.findViewById(R.id.card).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -87,8 +91,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
             return noteTitle;
         }
 
-        public TextView getNoteCreateDate() {
-            return noteCreateDate;
+        public TextView getDate() {
+            return date;
         }
     }
 }

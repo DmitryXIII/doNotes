@@ -7,4 +7,8 @@ import java.util.List;
 public interface NotesListView {
 
     void showNotes(List<Note> notes);
+
+    void showProgress();
+
+    void hideProgress();
 }

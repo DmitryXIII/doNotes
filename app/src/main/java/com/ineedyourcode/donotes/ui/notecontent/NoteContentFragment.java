@@ -73,8 +73,8 @@ public class NoteContentFragment extends Fragment {
         TextView noteContent = view.findViewById(R.id.txt_note_content);
         ImageView close = view.findViewById(R.id.close_icon);
         FloatingActionButton fab = view.findViewById(R.id.fab);
-        noteTitle.setText(note.getNoteTitle());
-        noteContent.setText(note.getNoteContent());
+        noteTitle.setText(note.getTitle());
+        noteContent.setText(note.getMessage());
 
         fab.setOnClickListener(v -> Toast.makeText(requireContext(), getString(R.string.fab_edit_message), Toast.LENGTH_SHORT).show());
 

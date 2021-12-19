@@ -1,36 +1,82 @@
 package com.ineedyourcode.donotes.domain;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.ineedyourcode.donotes.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class NotesRepositoryBuffer implements NotesRepository{
 
+    public static final NotesRepository INSTANCE = new NotesRepositoryBuffer();
 
-    @Override
-    public List<Note> getNotes(Context context) {
-        ArrayList<Note> updatedNotesList = new ArrayList<>();
+    private final Executor executor = Executors.newSingleThreadExecutor();
 
-        for (int i = 1; i < 101; i++) {
-            updatedNotesList.add(new Note(context.getString(R.string.note_title) + "_" + i, getNoteContent(R.string.note_content, context, i), R.string.note_create_date));
+    private final ArrayList<Note> result = new ArrayList<>();
 
-        }
-        return updatedNotesList;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+
+    private NotesRepositoryBuffer() {
+
+        Calendar calendar = Calendar.getInstance();
+
+        result.add(new Note(UUID.randomUUID().toString(), "Title One", "Message One", calendar.getTime()));
+        result.add(new Note(UUID.randomUUID().toString(), "Title Two", "Message Two", calendar.getTime()));
+
+        calendar.add(Calendar.DAY_OF_YEAR, -3);
+        result.add(new Note(UUID.randomUUID().toString(), "Title Three", "Message Three", calendar.getTime()));
+        result.add(new Note(UUID.randomUUID().toString(), "Title Four", "Message Four", calendar.getTime()));
+        result.add(new Note(UUID.randomUUID().toString(), "Title Five", "Message Five", calendar.getTime()));
+
+        calendar.add(Calendar.MONTH, -2);
+        result.add(new Note(UUID.randomUUID().toString(), "Title Six", "Message Six", calendar.getTime()));
+//
+//        calendar.add(Calendar.DAY_OF_YEAR, -3);
+//        result.add(new Note(UUID.randomUUID().toString(), "Title Seven", "Message Seven", calendar.getTime()));
+//        result.add(new Note(UUID.randomUUID().toString(), "Title Eight", "Message Eight", calendar.getTime()));
+//        result.add(new Note(UUID.randomUUID().toString(), "Title Nine", "Message Nine", calendar.getTime()));
+//        result.add(new Note(UUID.randomUUID().toString(), "Title Ten", "Message Ten", calendar.getTime()));
+
+//        for (int i  = 0; i < 10000; i++) {
+//            result.add(new Note(UUID.randomUUID().toString(), "Title Ten", "Message Ten", new Date()));
+//
+//        }
     }
 
-    private String getNoteContent (int resourceId, Context context, int i) {
-        String noteContent = "";
-        String tempContent = context.getString(resourceId);
-        for (int j = 0; j < 100; j++) {
-            noteContent = noteContent + tempContent + "_" + i + ", ";
-            if (j < 99) {
-            } else {
-                noteContent = noteContent + tempContent + "_" + i;
+    @Override
+    public void getAll(Callback<List<Note>> callback) {
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+//                        if (new Random().nextBoolean()) {
+//                            if (new Random().nextBoolean()) {
+                        callback.onSuccess(result);
+//                            } else {
+//                                callback.onSuccess(new ArrayList<>());
+//                            }
+//                        } else {
+//                            callback.onError(new IOException());
+//                        }
+                    }
+                });
             }
-        }
-        return noteContent;
+        });
     }
 }

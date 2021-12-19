@@ -5,5 +5,5 @@ import android.content.Context;
 import java.util.List;
 
 public interface NotesRepository {
-    List<Note> getNotes(Context context);
+    void getAll(Callback<List<Note>> callback);
 }

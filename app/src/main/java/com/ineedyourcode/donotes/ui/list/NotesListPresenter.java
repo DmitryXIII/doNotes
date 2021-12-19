@@ -1,7 +1,6 @@
 package com.ineedyourcode.donotes.ui.list;
 
-import android.content.Context;
-
+import com.ineedyourcode.donotes.domain.Callback;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.NotesRepository;
 
@@ -18,9 +17,21 @@ public class NotesListPresenter {
         this.repository = repository;
     }
 
-    public void updateNotesList (Context context) {
-       List<Note> updatedNotesList = repository.getNotes(context);
+    public void requestNotes() {
+        view.showProgress();
 
-        view.showNotes(updatedNotesList);
+        repository.getAll(new Callback<List<Note>>() {
+            @Override
+            public void onSuccess(List<Note> result) {
+                view.showNotes(result);
+                view.hideProgress();
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                view.hideProgress();
+            }
+        });
+
     }
 }
