@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements com.ineedyourcode
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                .replace(R.id.fragment_container, NoteContentFragment.newInstance(selectedNote))
+                                .add(R.id.fragment_container, NoteContentFragment.newInstance(selectedNote))
                                 .addToBackStack("")
                                 .commit();
                     }

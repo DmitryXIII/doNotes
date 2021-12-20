@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,13 +19,23 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
+import com.ineedyourcode.donotes.domain.NotesRepositoryBuffer;
 import com.ineedyourcode.donotes.ui.MainActivity;
 import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
 import com.ineedyourcode.donotes.ui.dialogalert.BottomDialogFragment;
 
-public class NoteContentFragment extends Fragment {
-    private static final String ARG_NOTE = "ARG_NOTE";
+public class NoteContentFragment extends Fragment implements AddNoteView {
+    public static String ARG_NOTE = "ARG_NOTE";
+    public static String RESULT_KEY = "NoteContentFragment";
+    public static final String KEY = "NoteContentFragment";
+
+    private FloatingActionButton fab;
+    private ProgressBar savingProgressBar;
+    private AddNotePresenter presenter;
+    TextView noteTitle;
+    TextView noteContent;
+    BottomAppBar bar;
 
     public static NoteContentFragment newInstance(Note note) {
         NoteContentFragment fragment = new NoteContentFragment();
@@ -39,12 +50,27 @@ public class NoteContentFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        presenter = new AddNotePresenter(this, NotesRepositoryBuffer.INSTANCE);
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        noteTitle = view.findViewById(R.id.txt_note_title);
+        noteContent = view.findViewById(R.id.txt_note_content);
+        Note note = null;
+        try {
+            note = requireArguments().getParcelable(ARG_NOTE);
+            noteTitle.setText(note.getTitle());
+            noteContent.setText(note.getMessage());
+        } catch (IllegalStateException e) {
+            noteTitle.setText("New note");
+            noteContent.setText("");
+        }
 
-        Note note = requireArguments().getParcelable(ARG_NOTE);
-
-        BottomAppBar bar = view.findViewById(R.id.bar);
+        bar = view.findViewById(R.id.bar);
 
         Activity activity = requireActivity();
         if (activity instanceof ToolbarSetter) {
@@ -69,14 +95,17 @@ public class NoteContentFragment extends Fragment {
             return false;
         });
 
-        TextView noteTitle = view.findViewById(R.id.txt_note_title);
-        TextView noteContent = view.findViewById(R.id.txt_note_content);
-        ImageView close = view.findViewById(R.id.close_icon);
-        FloatingActionButton fab = view.findViewById(R.id.fab);
-        noteTitle.setText(note.getTitle());
-        noteContent.setText(note.getMessage());
 
-        fab.setOnClickListener(v -> Toast.makeText(requireContext(), getString(R.string.fab_edit_message), Toast.LENGTH_SHORT).show());
+        savingProgressBar = view.findViewById(R.id.saving_progress);
+        ImageView close = view.findViewById(R.id.close_icon);
+        fab = view.findViewById(R.id.fab);
+
+
+        fab.setOnClickListener(v -> {
+            hideKeyboardFrom(requireContext(), noteTitle);
+            hideKeyboardFrom(requireContext(), noteContent);
+            presenter.saveNote(noteTitle.getText().toString(), noteContent.getText().toString());
+        });
 
         close.setOnClickListener(v -> {
             hideKeyboardFrom(requireContext(), noteTitle);
@@ -120,5 +149,27 @@ public class NoteContentFragment extends Fragment {
     private void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    @Override
+    public void noteSaved(Note note) {
+        Bundle result = new Bundle();
+        result.putParcelable(ARG_NOTE, note);
+
+        getParentFragmentManager()
+                .setFragmentResult(KEY, result);
+
+    }
+
+    @Override
+    public void showProgress() {
+        fab.setVisibility(View.GONE);
+        savingProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        fab.setVisibility(View.VISIBLE);
+        savingProgressBar.setVisibility(View.GONE);
     }
 }

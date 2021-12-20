@@ -2,14 +2,9 @@ package com.ineedyourcode.donotes.ui.list;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -29,20 +24,25 @@ import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.NotesRepositoryBuffer;
 import com.ineedyourcode.donotes.ui.adapter.AdapterItem;
+import com.ineedyourcode.donotes.ui.adapter.NoteAdapterItem;
 import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
+import com.ineedyourcode.donotes.ui.notecontent.NoteContentFragment;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class NotesListFragment extends Fragment implements NotesListView {
     public static String ARG_NOTE = "ARG_NOTE";
     public static String RESULT_KEY = "NotesListFragment_RESULT";
+    public static String TAG = "NotesListFragment_RESULT";
 
     private RecyclerView notesContainer;
     private NotesListPresenter presenter;
     private NotesAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView emptyMessage;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,6 +83,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
                     }
                 });
 
+        Calendar calendar = Calendar.getInstance();
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresher);
         swipeRefreshLayout.setProgressBackgroundColorSchemeColor(requireContext().getColor(R.color.note_title));
         swipeRefreshLayout.setColorSchemeColors(requireContext().getColor(R.color.background_dark));
@@ -103,7 +104,12 @@ public class NotesListFragment extends Fragment implements NotesListView {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(requireContext(), getString(R.string.fab_new_note_message), Toast.LENGTH_SHORT).show();
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .add(R.id.fragment_container, new NoteContentFragment())
+                        .addToBackStack("")
+                        .commit();
             }
         });
 
@@ -136,6 +142,16 @@ public class NotesListFragment extends Fragment implements NotesListView {
         });
 
         presenter.requestNotes();
+
+        getParentFragmentManager()
+                .setFragmentResultListener(NoteContentFragment.KEY, getViewLifecycleOwner(), new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                        Note note = result.getParcelable(NoteContentFragment.ARG_NOTE);
+
+                        presenter.onNoteAdded(note);
+                    }
+                });
     }
 
     @Override
@@ -164,15 +180,12 @@ public class NotesListFragment extends Fragment implements NotesListView {
         emptyMessage.setVisibility(View.GONE);
     }
 
-   /* @Override
-    public void showRefresh() {
-        swipeRefreshLayout.setRefreshing(true);
-    }
-
     @Override
-    public void hideRefresh() {
-        swipeRefreshLayout.setRefreshing(false);
-    }*/
+    public void onNoteAdded(NoteAdapterItem adapterItem) {
+        int index = adapter.addItem(adapterItem);
+
+        adapter.notifyItemInserted(index - 1);
+    }
 
     private void showAlertFragmentDialog(String message) {
         AlertDialogFragment.newInstance(message)

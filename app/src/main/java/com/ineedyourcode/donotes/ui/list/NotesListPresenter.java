@@ -1,7 +1,5 @@
 package com.ineedyourcode.donotes.ui.list;
 
-import android.view.View;
-
 import com.ineedyourcode.donotes.domain.Callback;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.NotesRepository;
@@ -56,5 +54,13 @@ public class NotesListPresenter {
             }
         });
 
+    }
+
+    public void onNoteAdded(Note note) {
+        NoteAdapterItem adapterItem = new NoteAdapterItem(note, note.getTitle(), dateFormat.format(note.getCreatedAt()) + " " + timeFormat.format(note.getCreatedAt()));
+
+        view.onNoteAdded(adapterItem);
+
+        view.hideEmpty();
     }
 }

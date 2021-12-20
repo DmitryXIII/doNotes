@@ -37,6 +37,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         data.addAll(notes);
     }
 
+    public int addItem(NoteAdapterItem note) {
+        data.add(note);
+        return data.size();
+    }
+
     @NonNull
     @Override
     public NotesAdapter.NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -47,7 +52,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
     @Override
     public void onBindViewHolder(@NonNull NotesAdapter.NoteViewHolder holder, int position) {
 
-        NoteAdapterItem note = (NoteAdapterItem)data.get(position);
+        NoteAdapterItem note = (NoteAdapterItem) data.get(position);
 
         holder.getNoteTitle().setText(note.getTitle());
         holder.getDate().setText(note.getTime());
