@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/background_dark"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@color/background_dark">
 
         <ImageView
             android:id="@+id/close_icon"
@@ -23,7 +23,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/txt_note_title"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -37,8 +37,8 @@
             android:id="@+id/separator"
             android:layout_width="@dimen/zero_value"
             android:layout_height="@dimen/separator_height"
-            android:background="@drawable/separator"
             android:layout_marginHorizontal="@dimen/note_bg_padding"
+            android:background="@drawable/separator"
             app:layout_constraintBottom_toTopOf="@id/scroll_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +64,7 @@
                 android:paddingBottom="@dimen/note_content_padding_bottom"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="@dimen/note_content_text_size"
-                tools:text="@string/appbar_scrolling_view_behavior"/>
+                tools:text="@string/appbar_scrolling_view_behavior" />
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -90,5 +90,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_anchor="@id/bar"
-        app:layout_anchorGravity="center|top"/>
+        app:layout_anchorGravity="center|top" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

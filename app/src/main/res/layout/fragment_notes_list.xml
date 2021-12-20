@@ -27,7 +27,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/notes_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/recycler_view_padding_bottom"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.bottomappbar.BottomAppBar

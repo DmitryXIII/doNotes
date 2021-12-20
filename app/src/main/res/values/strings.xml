@@ -36,4 +36,6 @@
     <string name="alert_dialog_exit_message">Exit app?</string>
     <string name="list_view">list_view</string>
     <string name="notes_are_absent_today">Notes are absent today</string>
+    <string name="action_update">update</string>
+    <string name="action_delete">delete</string>
 </resources>

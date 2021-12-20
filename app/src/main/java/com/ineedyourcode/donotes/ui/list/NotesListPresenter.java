@@ -62,5 +62,26 @@ public class NotesListPresenter {
         view.onNoteAdded(adapterItem);
 
         view.hideEmpty();
+
+
+    }
+
+    public void removeItem(Note selectedNote) {
+        view.showProgress();
+
+        repository.delete(selectedNote, new Callback<Void>() {
+            @Override
+            public void onSuccess(Void result) {
+                view.hideProgress();
+                view.onNoteRemoved(selectedNote);
+            }
+
+            @Override
+            public void onError(Throwable error) {
+                view.hideProgress();
+            }
+        });
+
+
     }
 }

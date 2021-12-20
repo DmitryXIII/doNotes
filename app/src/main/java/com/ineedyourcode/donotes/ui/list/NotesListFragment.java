@@ -2,7 +2,10 @@ package com.ineedyourcode.donotes.ui.list;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -29,7 +32,6 @@ import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
 import com.ineedyourcode.donotes.ui.notecontent.NoteContentFragment;
 
-import java.util.Calendar;
 import java.util.List;
 
 public class NotesListFragment extends Fragment implements NotesListView {
@@ -42,6 +44,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
     private NotesAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView emptyMessage;
+    private Note selectedNote;
 
 
     @Override
@@ -49,7 +52,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
         super.onCreate(savedInstanceState);
 
         presenter = new NotesListPresenter(this, NotesRepositoryBuffer.INSTANCE);
-        adapter = new NotesAdapter();
+        adapter = new NotesAdapter(this);
         adapter.setOnClick(new NotesAdapter.OnClick() {
             @Override
             public void onClick(Note note) {
@@ -58,6 +61,11 @@ public class NotesListFragment extends Fragment implements NotesListView {
 
                 getParentFragmentManager()
                         .setFragmentResult(RESULT_KEY, data);
+            }
+
+            @Override
+            public void onLongClick(Note note) {
+                selectedNote = note;
             }
         });
     }
@@ -83,7 +91,6 @@ public class NotesListFragment extends Fragment implements NotesListView {
                     }
                 });
 
-        Calendar calendar = Calendar.getInstance();
         swipeRefreshLayout = view.findViewById(R.id.swipe_refresher);
         swipeRefreshLayout.setProgressBackgroundColorSchemeColor(requireContext().getColor(R.color.note_title));
         swipeRefreshLayout.setColorSchemeColors(requireContext().getColor(R.color.background_dark));
@@ -95,12 +102,12 @@ public class NotesListFragment extends Fragment implements NotesListView {
         });
 
         emptyMessage = view.findViewById(R.id.empty_list_message);
+
         notesContainer = view.findViewById(R.id.notes_container);
         notesContainer.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         notesContainer.setAdapter(adapter);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,10 +192,41 @@ public class NotesListFragment extends Fragment implements NotesListView {
         int index = adapter.addItem(adapterItem);
 
         adapter.notifyItemInserted(index - 1);
+        notesContainer.smoothScrollToPosition(index - 1);
+
+
+    }
+
+    @Override
+    public void onNoteRemoved(Note selectedNote) {
+        int index = adapter.removeItem(selectedNote);
+
+        adapter.notifyItemRemoved(index);
     }
 
     private void showAlertFragmentDialog(String message) {
         AlertDialogFragment.newInstance(message)
                 .show(getParentFragmentManager(), AlertDialogFragment.getTAG());
+    }
+
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater menuInflater = requireActivity().getMenuInflater();
+        menuInflater.inflate(R.menu.notes_list_context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_delete) {
+            presenter.removeItem(selectedNote);
+
+            Toast.makeText(requireContext(), "Delete " + selectedNote.getTitle(), Toast.LENGTH_SHORT).show();
+        }
+        if (item.getItemId() == R.id.action_update) {
+            Toast.makeText(requireContext(), "Update " + selectedNote.getTitle(), Toast.LENGTH_SHORT).show();
+        }
+        return super.onContextItemSelected(item);
     }
 }

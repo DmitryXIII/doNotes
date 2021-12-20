@@ -23,7 +23,7 @@ public class NotesRepositoryBuffer implements NotesRepository {
 
     private NotesRepositoryBuffer() {
 
-        /*Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
 
         result.add(new Note(UUID.randomUUID().toString(), "Title One", "Message One", calendar.getTime()));
         result.add(new Note(UUID.randomUUID().toString(), "Title Two", "Message Two", calendar.getTime()));
@@ -34,7 +34,7 @@ public class NotesRepositoryBuffer implements NotesRepository {
         result.add(new Note(UUID.randomUUID().toString(), "Title Five", "Message Five", calendar.getTime()));
 
         calendar.add(Calendar.DAY_OF_YEAR, -2);
-        result.add(new Note(UUID.randomUUID().toString(), "Title Six", "Message Six", calendar.getTime()));*/
+        result.add(new Note(UUID.randomUUID().toString(), "Title Six", "Message Six", calendar.getTime()));
 //
 //        calendar.add(Calendar.DAY_OF_YEAR, -3);
 //        result.add(new Note(UUID.randomUUID().toString(), "Title Seven", "Message Seven", calendar.getTime()));
@@ -89,6 +89,29 @@ public class NotesRepositoryBuffer implements NotesRepository {
                         result.add(note);
 
                         callback.onSuccess(note);
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public void delete(Note note, Callback<Void> callback) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        result.remove(note);
+
+                        callback.onSuccess(null);
                     }
                 });
             }

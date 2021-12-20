@@ -158,7 +158,6 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
 
         getParentFragmentManager()
                 .setFragmentResult(KEY, result);
-
     }
 
     @Override

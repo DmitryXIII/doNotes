@@ -1,5 +1,6 @@
 package com.ineedyourcode.donotes.ui.list;
 
+import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.ui.adapter.AdapterItem;
 import com.ineedyourcode.donotes.ui.adapter.NoteAdapterItem;
 
@@ -18,4 +19,6 @@ public interface NotesListView {
     void hideEmpty();
 
     void onNoteAdded(NoteAdapterItem adapterItem);
+
+    void onNoteRemoved(Note selectedNote);
 }
