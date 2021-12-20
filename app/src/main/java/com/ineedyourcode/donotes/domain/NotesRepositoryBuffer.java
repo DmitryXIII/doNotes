@@ -9,11 +9,12 @@ import com.ineedyourcode.donotes.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class NotesRepositoryBuffer implements NotesRepository{
+public class NotesRepositoryBuffer implements NotesRepository {
 
     public static final NotesRepository INSTANCE = new NotesRepositoryBuffer();
 
@@ -30,12 +31,12 @@ public class NotesRepositoryBuffer implements NotesRepository{
         result.add(new Note(UUID.randomUUID().toString(), "Title One", "Message One", calendar.getTime()));
         result.add(new Note(UUID.randomUUID().toString(), "Title Two", "Message Two", calendar.getTime()));
 
-        calendar.add(Calendar.DAY_OF_YEAR, -3);
+        calendar.add(Calendar.DAY_OF_YEAR, -1);
         result.add(new Note(UUID.randomUUID().toString(), "Title Three", "Message Three", calendar.getTime()));
         result.add(new Note(UUID.randomUUID().toString(), "Title Four", "Message Four", calendar.getTime()));
         result.add(new Note(UUID.randomUUID().toString(), "Title Five", "Message Five", calendar.getTime()));
 
-        calendar.add(Calendar.MONTH, -2);
+        calendar.add(Calendar.DAY_OF_YEAR, -2);
         result.add(new Note(UUID.randomUUID().toString(), "Title Six", "Message Six", calendar.getTime()));
 //
 //        calendar.add(Calendar.DAY_OF_YEAR, -3);
@@ -65,15 +66,10 @@ public class NotesRepositoryBuffer implements NotesRepository{
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-//                        if (new Random().nextBoolean()) {
-//                            if (new Random().nextBoolean()) {
                         callback.onSuccess(result);
-//                            } else {
-//                                callback.onSuccess(new ArrayList<>());
-//                            }
+
 //                        } else {
 //                            callback.onError(new IOException());
-//                        }
                     }
                 });
             }

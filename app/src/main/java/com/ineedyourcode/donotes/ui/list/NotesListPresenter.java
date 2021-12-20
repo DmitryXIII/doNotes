@@ -1,5 +1,7 @@
 package com.ineedyourcode.donotes.ui.list;
 
+import android.view.View;
+
 import com.ineedyourcode.donotes.domain.Callback;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.NotesRepository;
@@ -33,10 +35,18 @@ public class NotesListPresenter {
             public void onSuccess(List<Note> result) {
                 ArrayList<AdapterItem> adapterItems = new ArrayList<>();
 
-                for (Note note: result) {
-                    adapterItems.add(new NoteAdapterItem(note, note.getTitle(), dateFormat.format(note.getCreatedAt()) + " " +  timeFormat.format(note.getCreatedAt())));
+                for (Note note : result) {
+                    adapterItems.add(new NoteAdapterItem(note, note.getTitle(), dateFormat.format(note.getCreatedAt()) + " " + timeFormat.format(note.getCreatedAt())));
                 }
+
                 view.showNotes(adapterItems);
+
+                if (adapterItems.isEmpty()) {
+                    view.showEmpty();
+                } else {
+                    view.hideEmpty();
+                }
+
                 view.hideProgress();
             }
 

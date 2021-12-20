@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -40,7 +41,8 @@ public class NotesListFragment extends Fragment implements NotesListView {
     private RecyclerView notesContainer;
     private NotesListPresenter presenter;
     private NotesAdapter adapter;
-    private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private TextView emptyMessage;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,8 +83,17 @@ public class NotesListFragment extends Fragment implements NotesListView {
                     }
                 });
 
-        progressBar = view.findViewById(R.id.progress_circular);
+        swipeRefreshLayout = view.findViewById(R.id.swipe_refresher);
+        swipeRefreshLayout.setProgressBackgroundColorSchemeColor(requireContext().getColor(R.color.note_title));
+        swipeRefreshLayout.setColorSchemeColors(requireContext().getColor(R.color.background_dark));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.requestNotes();
+            }
+        });
 
+        emptyMessage = view.findViewById(R.id.empty_list_message);
         notesContainer = view.findViewById(R.id.notes_container);
         notesContainer.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
         notesContainer.setAdapter(adapter);
@@ -135,13 +146,33 @@ public class NotesListFragment extends Fragment implements NotesListView {
 
     @Override
     public void showProgress() {
-        progressBar.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
     public void hideProgress() {
-        progressBar.setVisibility(View.GONE);
+        swipeRefreshLayout.setRefreshing(false);
     }
+
+    @Override
+    public void showEmpty() {
+        emptyMessage.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideEmpty() {
+        emptyMessage.setVisibility(View.GONE);
+    }
+
+   /* @Override
+    public void showRefresh() {
+        swipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void hideRefresh() {
+        swipeRefreshLayout.setRefreshing(false);
+    }*/
 
     private void showAlertFragmentDialog(String message) {
         AlertDialogFragment.newInstance(message)
