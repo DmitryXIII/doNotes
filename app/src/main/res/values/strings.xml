@@ -1,20 +1,8 @@
 <resources>
     <string name="app_name">doNotes</string>
-    <string name="note_1_content">note_1_content</string>
-    <string name="note_2_content">note_2_content</string>
-    <string name="note_3_content">note_3_content</string>
-    <string name="note_4_content">note_4_content</string>
-    <string name="note_5_content">note_5_content</string>
-    <string name="note_1_title">Note 1</string>
-    <string name="note_2_title">Note 2</string>
-    <string name="note_3_title">Note 3</string>
-    <string name="note_4_title">Note 4</string>
-    <string name="note_5_title">Note 5</string>
-    <string name="note_1_create_date">01.01.2021</string>
-    <string name="note_2_create_date">02.01.2021</string>
-    <string name="note_3_create_date">03.01.2021</string>
-    <string name="note_4_create_date">04.01.2021</string>
-    <string name="note_5_create_date">02.01.2021</string>
+    <string name="note_content">note_content</string>
+    <string name="note_title">Note</string>
+    <string name="note_create_date">01.01.2021</string>
     <string name="created">created:</string>
     <string name="about">Some information about app</string>
     <string name="go_to_github">Go to GitHub</string>
@@ -35,4 +23,16 @@
     <string name="cancel">CANCEL</string>
     <string name="some_options_to_attach_file">Some options to attach file</string>
     <string name="snack_sync_notes">Sync notes</string>
+    <string name="button_cancel_message">\"Cancel\" pressed</string>
+    <string name="note_deleted_message">Note deleted</string>
+    <string name="attach_message">Attach file</string>
+    <string name="share_note_massage">Share this note</string>
+    <string name="bottomsheet_attach_message">Some options to attach file</string>
+    <string name="alert_dialog_delete_message">Delete this note?</string>
+    <string name="fab_edit_message">Edit note content</string>
+    <string name="exit_message">EXIT APP</string>
+    <string name="fab_new_note_message">Add new note</string>
+    <string name="search_notes_message">Search notes</string>
+    <string name="alert_dialog_exit_message">Exit app?</string>
+    <string name="list_view">list_view</string>
 </resources>

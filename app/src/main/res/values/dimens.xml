@@ -8,7 +8,7 @@
     <dimen name="padding_5dp">5dp</dimen>
     <dimen name="note_icon_size">40dp</dimen>
     <dimen name="separator_height">1dp</dimen>
-    <dimen name="note_bg_padding">30dp</dimen>
+    <dimen name="note_bg_padding">10dp</dimen>
     <dimen name="note_title_size">20sp</dimen>
     <dimen name="create_date_size">16sp</dimen>
     <dimen name="padding_10dp">10dp</dimen>
@@ -18,4 +18,9 @@
     <dimen name="alert_dialog_width">300dp</dimen>
     <dimen name="alert_icon_width">80dp</dimen>
     <dimen name="alert_icon_height">40dp</dimen>
+    <dimen name="note_card_stroke_width">1dp</dimen>
+    <dimen name="dim_4dp">4dp</dimen>
+    <dimen name="padding_20dp">20dp</dimen>
+    <dimen name="content_margin_top">8dp</dimen>
+    <dimen name="note_content_padding_bottom">60dp</dimen>
 </resources>

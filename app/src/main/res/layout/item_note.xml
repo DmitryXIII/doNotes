@@ -4,61 +4,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?selectableItemBackground"
-    android:orientation="vertical"
-    android:paddingHorizontal="@dimen/dim_16dp">
+    android:orientation="vertical">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/padding_5dp"
-        android:padding="@dimen/padding_10dp">
+        android:layout_marginHorizontal="@dimen/dim_8dp"
+        android:layout_marginTop="@dimen/dim_8dp"
+        android:backgroundTint="@color/background_dark"
+        app:rippleColor="@color/colorControlHighlight"
+        app:strokeColor="@color/separator"
+        app:strokeWidth="@dimen/note_card_stroke_width">
 
-        <ImageView
-            android:id="@+id/note_icon"
-            android:layout_width="@dimen/note_icon_size"
-            android:layout_height="@dimen/note_icon_size"
-            android:background="@drawable/ic_baseline_sticky_note_2_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/note_title"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/dim_16dp"
-            android:textColor="@color/note_title"
-            android:textSize="@dimen/note_title_size"
-            app:layout_constraintBottom_toTopOf="@id/title_create_date"
-            app:layout_constraintStart_toEndOf="@id/note_icon"
-            app:layout_constraintTop_toTopOf="@id/note_icon"
-            tools:text="Заголовок заметки" />
+            android:padding="@dimen/padding_20dp">
 
-        <TextView
-            android:id="@+id/title_create_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/created"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="@dimen/create_date_size"
-            app:layout_constraintBottom_toBottomOf="@id/note_icon"
-            app:layout_constraintStart_toStartOf="@id/note_title"
-            app:layout_constraintTop_toBottomOf="@id/note_title" />
+            <ImageView
+                android:id="@+id/note_icon"
+                android:layout_width="@dimen/note_icon_size"
+                android:layout_height="@dimen/note_icon_size"
+                android:background="@drawable/ic_baseline_sticky_note_2_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/note_create_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/padding_5dp"
-            android:gravity="center"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="@dimen/create_date_size"
-            app:layout_constraintBottom_toBottomOf="@id/title_create_date"
-            app:layout_constraintStart_toEndOf="@id/title_create_date"
-            app:layout_constraintTop_toBottomOf="@id/note_title"
-            tools:text="dd.mm.yyyy" />
+            <TextView
+                android:id="@+id/note_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dim_16dp"
+                android:textColor="@color/note_title"
+                android:textSize="@dimen/note_title_size"
+                app:layout_constraintBottom_toTopOf="@id/title_create_date"
+                app:layout_constraintStart_toEndOf="@id/note_icon"
+                app:layout_constraintTop_toTopOf="@id/note_icon"
+                tools:text="Заголовок заметки" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/title_create_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/created"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="@dimen/create_date_size"
+                app:layout_constraintBottom_toBottomOf="@id/note_icon"
+                app:layout_constraintStart_toStartOf="@id/note_title"
+                app:layout_constraintTop_toBottomOf="@id/note_title" />
+
+            <TextView
+                android:id="@+id/note_create_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/padding_5dp"
+                android:gravity="center"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="@dimen/create_date_size"
+                app:layout_constraintBottom_toBottomOf="@id/title_create_date"
+                app:layout_constraintStart_toEndOf="@id/title_create_date"
+                app:layout_constraintTop_toBottomOf="@id/note_title"
+                tools:text="dd.mm.yyyy" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
 </LinearLayout>
