@@ -30,6 +30,7 @@ import com.ineedyourcode.donotes.ui.adapter.AdapterItem;
 import com.ineedyourcode.donotes.ui.adapter.NoteAdapterItem;
 import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
+import com.ineedyourcode.donotes.ui.notecontent.AddNotePresenter;
 import com.ineedyourcode.donotes.ui.notecontent.NoteContentFragment;
 
 import java.util.List;
@@ -151,12 +152,21 @@ public class NotesListFragment extends Fragment implements NotesListView {
         presenter.requestNotes();
 
         getParentFragmentManager()
-                .setFragmentResultListener(NoteContentFragment.KEY, getViewLifecycleOwner(), new FragmentResultListener() {
+                .setFragmentResultListener(AddNotePresenter.KEY, getViewLifecycleOwner(), new FragmentResultListener() {
                     @Override
                     public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                        Note note = result.getParcelable(NoteContentFragment.ARG_NOTE);
+                        Note note = result.getParcelable(AddNotePresenter.ARG_NOTE);
 
                         presenter.onNoteAdded(note);
+                    }
+                });
+
+        getParentFragmentManager()
+                .setFragmentResultListener(UpdateNotePresenter.KEY, getViewLifecycleOwner(), new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                        Note note = result.getParcelable(UpdateNotePresenter.ARG_NOTE);
+
                     }
                 });
     }

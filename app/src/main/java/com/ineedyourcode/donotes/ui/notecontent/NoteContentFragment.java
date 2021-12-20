@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 
@@ -24,6 +26,8 @@ import com.ineedyourcode.donotes.ui.MainActivity;
 import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
 import com.ineedyourcode.donotes.ui.dialogalert.BottomDialogFragment;
+import com.ineedyourcode.donotes.ui.list.NotePresenter;
+import com.ineedyourcode.donotes.ui.list.UpdateNotePresenter;
 
 public class NoteContentFragment extends Fragment implements AddNoteView {
     public static String ARG_NOTE = "ARG_NOTE";
@@ -32,12 +36,16 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
 
     private FloatingActionButton fab;
     private ProgressBar savingProgressBar;
-    private AddNotePresenter presenter;
-    TextView noteTitle;
-    TextView noteContent;
+    private NotePresenter presenter;
+    EditText noteTitle;
+    EditText noteContent;
     BottomAppBar bar;
 
-    public static NoteContentFragment newInstance(Note note) {
+    public static NoteContentFragment addInstance() {
+        return new NoteContentFragment();
+    }
+
+    public static NoteContentFragment updateInstance(Note note) {
         NoteContentFragment fragment = new NoteContentFragment();
         Bundle arguments = new Bundle();
         arguments.putParcelable(ARG_NOTE, note);
@@ -50,17 +58,19 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        presenter = new AddNotePresenter(this, NotesRepositoryBuffer.INSTANCE);
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         noteTitle = view.findViewById(R.id.txt_note_title);
         noteContent = view.findViewById(R.id.txt_note_content);
-        Note note = null;
+        fab = view.findViewById(R.id.fab);
+        if (getArguments() == null) {
+            presenter = new AddNotePresenter(this, NotesRepositoryBuffer.INSTANCE);
+        } else {
+            Note note = getArguments().getParcelable(ARG_NOTE);
+            presenter = new UpdateNotePresenter(this, NotesRepositoryBuffer.INSTANCE, note);
+        }
+        /*Note note = null;
         try {
             note = requireArguments().getParcelable(ARG_NOTE);
             noteTitle.setText(note.getTitle());
@@ -68,7 +78,7 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
         } catch (IllegalStateException e) {
             noteTitle.setText("New note");
             noteContent.setText("");
-        }
+        }*/
 
         bar = view.findViewById(R.id.bar);
 
@@ -98,13 +108,11 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
 
         savingProgressBar = view.findViewById(R.id.saving_progress);
         ImageView close = view.findViewById(R.id.close_icon);
-        fab = view.findViewById(R.id.fab);
-
 
         fab.setOnClickListener(v -> {
             hideKeyboardFrom(requireContext(), noteTitle);
             hideKeyboardFrom(requireContext(), noteContent);
-            presenter.saveNote(noteTitle.getText().toString(), noteContent.getText().toString());
+            presenter.onActionPressed(noteTitle.getText().toString(), noteContent.getText().toString());
         });
 
         close.setOnClickListener(v -> {
@@ -152,15 +160,6 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
     }
 
     @Override
-    public void noteSaved(Note note) {
-        Bundle result = new Bundle();
-        result.putParcelable(ARG_NOTE, note);
-
-        getParentFragmentManager()
-                .setFragmentResult(KEY, result);
-    }
-
-    @Override
     public void showProgress() {
         fab.setVisibility(View.GONE);
         savingProgressBar.setVisibility(View.VISIBLE);
@@ -170,5 +169,26 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
     public void hideProgress() {
         fab.setVisibility(View.VISIBLE);
         savingProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setFabIcon(int icon) {
+        fab.setImageDrawable(ContextCompat.getDrawable(getContext(), icon));
+    }
+
+    @Override
+    public void setTitle(String title) {
+        noteTitle.setText(title);
+    }
+
+    @Override
+    public void setMessage(String message) {
+        noteContent.setText(message);
+    }
+
+    @Override
+    public void actionCompleted(String key, Bundle bundle) {
+        getParentFragmentManager()
+                .setFragmentResult(key, bundle);
     }
 }

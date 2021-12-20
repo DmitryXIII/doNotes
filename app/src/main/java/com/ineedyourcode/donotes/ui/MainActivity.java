@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements com.ineedyourcode
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                .add(R.id.fragment_container, NoteContentFragment.newInstance(selectedNote))
+                                .add(R.id.fragment_container, NoteContentFragment.updateInstance(selectedNote))
                                 .addToBackStack("")
                                 .commit();
                     }
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements com.ineedyourcode
         getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_content_container_land, NoteContentFragment.newInstance(selectedNote))
+                .replace(R.id.fragment_content_container_land, NoteContentFragment.updateInstance(selectedNote))
                 .addToBackStack("")
                 .commit();
     }
