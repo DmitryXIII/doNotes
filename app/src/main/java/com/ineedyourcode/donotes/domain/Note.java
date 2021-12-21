@@ -3,8 +3,6 @@ package com.ineedyourcode.donotes.domain;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.StringRes;
-
 import java.util.Date;
 import java.util.Objects;
 
@@ -14,28 +12,28 @@ public class Note implements Parcelable {
 
     private String title;
 
-    private String message;
+    private String content;
 
     private Date createdAt;
 
-    public Note(String id, String title, String message, Date createdAt) {
+    public Note(String id, String title, String content, Date createdAt) {
         this.id = id;
         this.title = title;
-        this.message = message;
+        this.content = content;
         this.createdAt = createdAt;
     }
 
     protected Note(Parcel in) {
         id = in.readString();
         title = in.readString();
-        message = in.readString();
+        content = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(title);
-        dest.writeString(message);
+        dest.writeString(content);
     }
 
     @Override
@@ -63,8 +61,8 @@ public class Note implements Parcelable {
         return title;
     }
 
-    public String getMessage() {
-        return message;
+    public String getContent() {
+        return content;
     }
 
     public Date getCreatedAt() {
@@ -75,8 +73,8 @@ public class Note implements Parcelable {
         this.title = title;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Override
@@ -84,11 +82,11 @@ public class Note implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Note note = (Note) o;
-        return Objects.equals(id, note.id) && Objects.equals(title, note.title) && Objects.equals(message, note.message) && Objects.equals(createdAt, note.createdAt);
+        return Objects.equals(id, note.id) && Objects.equals(title, note.title) && Objects.equals(content, note.content) && Objects.equals(createdAt, note.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, message, createdAt);
+        return Objects.hash(id, title, content, createdAt);
     }
 }

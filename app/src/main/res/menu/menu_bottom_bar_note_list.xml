@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_item_sync_notes_list"
+        android:id="@+id/menu_item_change_layout"
         android:enabled="true"
-        android:icon="@drawable/ic_baseline_sync_24"
-        android:title="@string/sync_notes_list"
+        android:icon="@drawable/ic_baseline_grid_view_24"
+        android:title="@string/change_grid_notes_list"
         app:showAsAction="ifRoom" />
 
     <item

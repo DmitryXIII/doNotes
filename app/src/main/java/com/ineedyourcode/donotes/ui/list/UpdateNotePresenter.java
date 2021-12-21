@@ -25,7 +25,7 @@ public class UpdateNotePresenter implements NotePresenter{
         view.setFabIcon(R.drawable.ic_baseline_edit_24);
 
         view.setTitle(note.getTitle());
-        view.setMessage(note.getMessage());
+        view.setMessage(note.getContent());
     }
 
     @Override

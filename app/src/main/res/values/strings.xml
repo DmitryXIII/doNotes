@@ -38,4 +38,8 @@
     <string name="notes_are_absent_today">Notes are absent today</string>
     <string name="action_update">update</string>
     <string name="action_delete">delete</string>
+    <string name="text_plain_type">text/plain</string>
+    <string name="new_note_title">New note title</string>
+    <string name="new_note_content">New note content</string>
+    <string name="change_grid_notes_list">change grid</string>
 </resources>

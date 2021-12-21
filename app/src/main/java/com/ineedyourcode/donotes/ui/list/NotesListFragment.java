@@ -1,6 +1,7 @@
 package com.ineedyourcode.donotes.ui.list;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -38,7 +40,6 @@ import java.util.List;
 public class NotesListFragment extends Fragment implements NotesListView {
     public static String ARG_NOTE = "ARG_NOTE";
     public static String RESULT_KEY = "NotesListFragment_RESULT";
-    public static String TAG = "NotesListFragment_RESULT";
 
     private RecyclerView notesContainer;
     private NotesListPresenter presenter;
@@ -46,7 +47,6 @@ public class NotesListFragment extends Fragment implements NotesListView {
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView emptyMessage;
     private Note selectedNote;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,15 +131,19 @@ public class NotesListFragment extends Fragment implements NotesListView {
 
         bar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
-                case R.id.menu_item_sync_notes_list:
-                    Snackbar snackbar = Snackbar.make(view, R.string.snack_sync_notes, Snackbar.LENGTH_SHORT);
-                    snackbar.getView().setBackgroundColor(requireContext().getColor(R.color.note_title));
-                    snackbar.setTextColor(requireContext().getColor(R.color.background_dark));
-                    snackbar.show();
+                case R.id.menu_item_change_layout:
+                    if (notesContainer.getLayoutManager().getClass().equals(GridLayoutManager.class)) {
+                        notesContainer.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+                    } else {
+                        notesContainer.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+                    }
                     return true;
 
                 case R.id.menu_item_search:
-                    Toast.makeText(requireContext(), getString(R.string.search_notes_message), Toast.LENGTH_SHORT).show();
+                    Snackbar snackbar = Snackbar.make(view, R.string.search_notes_message, Snackbar.LENGTH_SHORT);
+                    snackbar.getView().setBackgroundColor(requireContext().getColor(R.color.note_title));
+                    snackbar.setTextColor(requireContext().getColor(R.color.background_dark));
+                    snackbar.show();
                     return true;
 
                 case R.id.menu_item_exit_app:
@@ -203,8 +207,6 @@ public class NotesListFragment extends Fragment implements NotesListView {
 
         adapter.notifyItemInserted(index - 1);
         notesContainer.smoothScrollToPosition(index - 1);
-
-
     }
 
     @Override
@@ -234,9 +236,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
 
             Toast.makeText(requireContext(), "Delete " + selectedNote.getTitle(), Toast.LENGTH_SHORT).show();
         }
-        if (item.getItemId() == R.id.action_update) {
-            Toast.makeText(requireContext(), "Update " + selectedNote.getTitle(), Toast.LENGTH_SHORT).show();
-        }
+
         return super.onContextItemSelected(item);
     }
 }

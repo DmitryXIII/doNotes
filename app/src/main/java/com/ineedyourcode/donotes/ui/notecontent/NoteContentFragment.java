@@ -2,13 +2,12 @@ package com.ineedyourcode.donotes.ui.notecontent;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,7 +21,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.NotesRepositoryBuffer;
-import com.ineedyourcode.donotes.ui.MainActivity;
 import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
 import com.ineedyourcode.donotes.ui.dialogalert.BottomDialogFragment;
@@ -70,15 +68,6 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
             Note note = getArguments().getParcelable(ARG_NOTE);
             presenter = new UpdateNotePresenter(this, NotesRepositoryBuffer.INSTANCE, note);
         }
-        /*Note note = null;
-        try {
-            note = requireArguments().getParcelable(ARG_NOTE);
-            noteTitle.setText(note.getTitle());
-            noteContent.setText(note.getMessage());
-        } catch (IllegalStateException e) {
-            noteTitle.setText("New note");
-            noteContent.setText("");
-        }*/
 
         bar = view.findViewById(R.id.bar);
 
@@ -91,7 +80,7 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
         bar.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
                 case R.id.menu_item_share_note:
-                    Toast.makeText(requireContext(), getString(R.string.share_note_massage), Toast.LENGTH_SHORT).show();
+                    shareNote(noteContent.getText().toString());
                     return true;
 
                 case R.id.menu_item_attach_image:
@@ -107,20 +96,11 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
 
 
         savingProgressBar = view.findViewById(R.id.saving_progress);
-        ImageView close = view.findViewById(R.id.close_icon);
 
         fab.setOnClickListener(v -> {
             hideKeyboardFrom(requireContext(), noteTitle);
             hideKeyboardFrom(requireContext(), noteContent);
             presenter.onActionPressed(noteTitle.getText().toString(), noteContent.getText().toString());
-        });
-
-        close.setOnClickListener(v -> {
-            hideKeyboardFrom(requireContext(), noteTitle);
-            hideKeyboardFrom(requireContext(), noteContent);
-
-            ((MainActivity) requireActivity()).setSelectedNoteToNull();
-            requireActivity().onBackPressed();
         });
     }
 
@@ -157,6 +137,13 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
     private void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private void shareNote (String message) {
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType(getString(R.string.text_plain_type));
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, message);
+        startActivity(Intent.createChooser(intent, ""));
     }
 
     @Override

@@ -16,6 +16,7 @@ import android.widget.Button;
 import com.ineedyourcode.donotes.R;
 
 public class AboutAppFragment extends Fragment {
+    public static final String TAG = "AboutAppFragment";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

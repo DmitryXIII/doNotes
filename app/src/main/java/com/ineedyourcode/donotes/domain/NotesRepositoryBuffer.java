@@ -15,9 +15,9 @@ public class NotesRepositoryBuffer implements NotesRepository {
 
     public static final NotesRepository INSTANCE = new NotesRepositoryBuffer();
 
-    private final Executor executor = Executors.newSingleThreadExecutor();
+    private final ArrayList<Note> notes = new ArrayList<>();
 
-    private final ArrayList<Note> result = new ArrayList<>();
+    private final Executor executor = Executors.newSingleThreadExecutor();
 
     private final Handler handler = new Handler(Looper.getMainLooper());
 
@@ -25,27 +25,20 @@ public class NotesRepositoryBuffer implements NotesRepository {
 
         Calendar calendar = Calendar.getInstance();
 
-        result.add(new Note(UUID.randomUUID().toString(), "Title One", "Message One", calendar.getTime()));
-        result.add(new Note(UUID.randomUUID().toString(), "Title Two", "Message Two", calendar.getTime()));
+        for (int i = 1; i < 51; i++) {
+            calendar.add(Calendar.DAY_OF_YEAR, -(int) (1 + Math.random() * 365));
+            calendar.add(Calendar.MINUTE, -(int) (1 + Math.random() * 60));
+            String text = "Note_" + i;
+            notes.add(new Note(UUID.randomUUID().toString(), text, contentMaker(text), calendar.getTime()));
+        }
+    }
 
-        calendar.add(Calendar.DAY_OF_YEAR, -1);
-        result.add(new Note(UUID.randomUUID().toString(), "Title Three", "Message Three", calendar.getTime()));
-        result.add(new Note(UUID.randomUUID().toString(), "Title Four", "Message Four", calendar.getTime()));
-        result.add(new Note(UUID.randomUUID().toString(), "Title Five", "Message Five", calendar.getTime()));
-
-        calendar.add(Calendar.DAY_OF_YEAR, -2);
-        result.add(new Note(UUID.randomUUID().toString(), "Title Six", "Message Six", calendar.getTime()));
-//
-//        calendar.add(Calendar.DAY_OF_YEAR, -3);
-//        result.add(new Note(UUID.randomUUID().toString(), "Title Seven", "Message Seven", calendar.getTime()));
-//        result.add(new Note(UUID.randomUUID().toString(), "Title Eight", "Message Eight", calendar.getTime()));
-//        result.add(new Note(UUID.randomUUID().toString(), "Title Nine", "Message Nine", calendar.getTime()));
-//        result.add(new Note(UUID.randomUUID().toString(), "Title Ten", "Message Ten", calendar.getTime()));
-
-//        for (int i  = 0; i < 10000; i++) {
-//            result.add(new Note(UUID.randomUUID().toString(), "Title Ten", "Message Ten", new Date()));
-//
-//        }
+    private String contentMaker(String content) {
+        String newContent = content;
+        for (int i = 0; i < 200; i++) {
+            newContent = newContent + ", " + content;
+        }
+        return newContent;
     }
 
     @Override
@@ -63,7 +56,7 @@ public class NotesRepositoryBuffer implements NotesRepository {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        callback.onSuccess(result);
+                        callback.onSuccess(notes);
                     }
                 });
             }
@@ -86,7 +79,7 @@ public class NotesRepositoryBuffer implements NotesRepository {
                     public void run() {
                         Note note = new Note(UUID.randomUUID().toString(), title, message, new Date());
 
-                        result.add(note);
+                        notes.add(note);
 
                         callback.onSuccess(note);
                     }
@@ -112,17 +105,17 @@ public class NotesRepositoryBuffer implements NotesRepository {
 
                         int index = 0;
 
-                        for (int i = 0; i < result.size(); i++) {
-                            if (result.get(i).getId().equals(noteId)) {
+                        for (int i = 0; i < notes.size(); i++) {
+                            if (notes.get(i).getId().equals(noteId)) {
                                 index = i;
                                 break;
                             }
                         }
 
-                        Note editableNote = result.get(index);
+                        Note editableNote = notes.get(index);
 
                         editableNote.setTitle(title);
-                        editableNote.setMessage(message);
+                        editableNote.setContent(message);
 
                         callback.onSuccess(editableNote);
                     }
@@ -145,7 +138,7 @@ public class NotesRepositoryBuffer implements NotesRepository {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        result.remove(note);
+                        notes.remove(note);
 
                         callback.onSuccess(null);
                     }

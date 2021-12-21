@@ -12,6 +12,8 @@ import com.ineedyourcode.donotes.R;
 
 public class SettingsFragment extends Fragment {
 
+    public static final String TAG = "SettingsFragment";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
