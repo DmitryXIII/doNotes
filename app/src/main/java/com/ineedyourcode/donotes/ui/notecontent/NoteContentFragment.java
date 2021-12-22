@@ -29,8 +29,7 @@ import com.ineedyourcode.donotes.ui.list.UpdateNotePresenter;
 
 public class NoteContentFragment extends Fragment implements AddNoteView {
     public static String ARG_NOTE = "ARG_NOTE";
-    public static String RESULT_KEY = "NoteContentFragment";
-    public static final String KEY = "NoteContentFragment";
+    public static String KEY_RESULT = "NoteContentFragment";
 
     private FloatingActionButton fab;
     private ProgressBar savingProgressBar;
@@ -38,6 +37,8 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
     EditText noteTitle;
     EditText noteContent;
     BottomAppBar bar;
+
+    Note note;
 
     public static NoteContentFragment addInstance() {
         return new NoteContentFragment();
@@ -65,7 +66,7 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
         if (getArguments() == null) {
             presenter = new AddNotePresenter(this, NotesRepositoryBuffer.INSTANCE);
         } else {
-            Note note = getArguments().getParcelable(ARG_NOTE);
+            note = getArguments().getParcelable(ARG_NOTE);
             presenter = new UpdateNotePresenter(this, NotesRepositoryBuffer.INSTANCE, note);
         }
 
@@ -123,15 +124,31 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
     }
 
     private void setDialogListener(String keyResult, String argument, String message) {
-        getParentFragmentManager()
-                .setFragmentResultListener(keyResult, this, new FragmentResultListener() {
-                    @Override
-                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                        if (result.getInt(argument) == R.id.btn_dialog_ok) {
-                            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+        if (keyResult.equals("AlertDialogFragment")) {
+            getParentFragmentManager()
+                    .setFragmentResultListener(keyResult, this, new FragmentResultListener() {
+                        @Override
+                        public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                            if (result.getInt(argument) == R.id.btn_dialog_ok) {
+                                requireActivity().onBackPressed();
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable(ARG_NOTE, note);
+                                getParentFragmentManager()
+                                        .setFragmentResult(KEY_RESULT, bundle);
+                            }
                         }
-                    }
-                });
+                    });
+        } else {
+            getParentFragmentManager()
+                    .setFragmentResultListener(keyResult, this, new FragmentResultListener() {
+                        @Override
+                        public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                            if (result.getInt(argument) == R.id.btn_dialog_ok) {
+                                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
     }
 
     private void hideKeyboardFrom(Context context, View view) {
@@ -139,7 +156,7 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    private void shareNote (String message) {
+    private void shareNote(String message) {
         Intent intent = new Intent(android.content.Intent.ACTION_SEND);
         intent.setType(getString(R.string.text_plain_type));
         intent.putExtra(android.content.Intent.EXTRA_TEXT, message);

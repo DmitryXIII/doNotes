@@ -1,7 +1,6 @@
 package com.ineedyourcode.donotes.ui.list;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -82,12 +81,14 @@ public class NotesListFragment extends Fragment implements NotesListView {
         super.onViewCreated(view, savedInstanceState);
 
         getParentFragmentManager()
-                .setFragmentResultListener(AlertDialogFragment.KEY_RESULT, this, new FragmentResultListener() {
+                .setFragmentResultListener(NoteContentFragment.KEY_RESULT, this, new FragmentResultListener() {
                     @Override
                     public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                        if (result.getInt(AlertDialogFragment.ARG_BUTTON) == R.id.btn_dialog_ok) {
-                            requireActivity().finish();
-                            Toast.makeText(requireContext(), getString(R.string.exit_message), Toast.LENGTH_SHORT).show();
+                        selectedNote = result.getParcelable(NoteContentFragment.ARG_NOTE);
+                        if (selectedNote == null) {
+                            Toast.makeText(requireContext(), getString(R.string.delete_error_message), Toast.LENGTH_SHORT).show();
+                        } else {
+                            presenter.removeItem(selectedNote);
                         }
                     }
                 });
@@ -148,6 +149,16 @@ public class NotesListFragment extends Fragment implements NotesListView {
 
                 case R.id.menu_item_exit_app:
                     showAlertFragmentDialog(getString(R.string.alert_dialog_exit_message));
+                    getParentFragmentManager()
+                            .setFragmentResultListener(AlertDialogFragment.KEY_RESULT, this, new FragmentResultListener() {
+                                @Override
+                                public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                                    if (result.getInt(AlertDialogFragment.ARG_BUTTON) == R.id.btn_dialog_ok) {
+                                        requireActivity().finish();
+                                        Toast.makeText(requireContext(), getString(R.string.exit_message), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                     return true;
             }
             return false;

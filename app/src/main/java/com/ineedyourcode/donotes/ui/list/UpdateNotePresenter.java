@@ -8,7 +8,7 @@ import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.NotesRepository;
 import com.ineedyourcode.donotes.ui.notecontent.AddNoteView;
 
-public class UpdateNotePresenter implements NotePresenter{
+public class UpdateNotePresenter implements NotePresenter {
 
     public static String ARG_NOTE = "ARG_NOTE";
     public static final String KEY = "NoteContentFragment_UPDATE";

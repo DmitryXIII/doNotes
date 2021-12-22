@@ -14,7 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ineedyourcode.donotes.R;
 
 public class BottomDialogFragment extends BottomSheetDialogFragment {
-    public static final String KEY_RESULT = "AlertDialogFragment";
+    public static final String KEY_RESULT = "BottomDialogFragment";
     public static final String ARG_BUTTON = "ARG_BUTTON";
 
     private static final String TAG = "BottomDialogFragment";
