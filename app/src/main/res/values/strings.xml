@@ -43,4 +43,5 @@
     <string name="new_note_content">New note content</string>
     <string name="change_grid_notes_list">change grid</string>
     <string name="delete_error_message">Impossible to delete unsaved note</string>
+    <string name="path_name">/data/user/0/com.ineedyourcode.donotes/files/</string>
 </resources>

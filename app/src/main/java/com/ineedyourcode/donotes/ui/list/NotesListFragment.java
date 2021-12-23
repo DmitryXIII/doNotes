@@ -25,8 +25,8 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.ineedyourcode.donotes.R;
+import com.ineedyourcode.donotes.domain.internalrepo.InternalFileWriterRepository;
 import com.ineedyourcode.donotes.domain.Note;
-import com.ineedyourcode.donotes.domain.NotesRepositoryBuffer;
 import com.ineedyourcode.donotes.ui.adapter.AdapterItem;
 import com.ineedyourcode.donotes.ui.adapter.NoteAdapterItem;
 import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
@@ -51,7 +51,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = new NotesListPresenter(this, NotesRepositoryBuffer.INSTANCE);
+        presenter = new NotesListPresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()));
         adapter = new NotesAdapter(this);
         adapter.setOnClick(new NotesAdapter.OnClick() {
             @Override

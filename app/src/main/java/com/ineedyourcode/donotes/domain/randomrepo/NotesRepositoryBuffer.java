@@ -1,7 +1,11 @@
-package com.ineedyourcode.donotes.domain;
+package com.ineedyourcode.donotes.domain.randomrepo;
 
 import android.os.Handler;
 import android.os.Looper;
+
+import com.ineedyourcode.donotes.domain.Callback;
+import com.ineedyourcode.donotes.domain.Note;
+import com.ineedyourcode.donotes.domain.NotesRepository;
 
 import java.util.ArrayList;
 import java.util.Calendar;

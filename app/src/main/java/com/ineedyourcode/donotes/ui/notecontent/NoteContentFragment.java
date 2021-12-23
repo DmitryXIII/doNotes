@@ -3,6 +3,7 @@ package com.ineedyourcode.donotes.ui.notecontent;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
@@ -19,8 +21,8 @@ import androidx.fragment.app.FragmentResultListener;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ineedyourcode.donotes.R;
+import com.ineedyourcode.donotes.domain.internalrepo.InternalFileWriterRepository;
 import com.ineedyourcode.donotes.domain.Note;
-import com.ineedyourcode.donotes.domain.NotesRepositoryBuffer;
 import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
 import com.ineedyourcode.donotes.ui.dialogalert.BottomDialogFragment;
@@ -34,11 +36,10 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
     private FloatingActionButton fab;
     private ProgressBar savingProgressBar;
     private NotePresenter presenter;
-    EditText noteTitle;
-    EditText noteContent;
-    BottomAppBar bar;
-
-    Note note;
+    private EditText noteTitle;
+    private EditText noteContent;
+    private BottomAppBar bar;
+    private Note note;
 
     public static NoteContentFragment addInstance() {
         return new NoteContentFragment();
@@ -56,6 +57,7 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
         super(R.layout.fragment_notes_content);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -64,10 +66,10 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
         noteContent = view.findViewById(R.id.txt_note_content);
         fab = view.findViewById(R.id.fab);
         if (getArguments() == null) {
-            presenter = new AddNotePresenter(this, NotesRepositoryBuffer.INSTANCE);
+            presenter = new AddNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()));
         } else {
             note = getArguments().getParcelable(ARG_NOTE);
-            presenter = new UpdateNotePresenter(this, NotesRepositoryBuffer.INSTANCE, note);
+            presenter = new UpdateNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()), note);
         }
 
         bar = view.findViewById(R.id.bar);

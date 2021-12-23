@@ -62,8 +62,6 @@ public class NotesListPresenter {
         view.onNoteAdded(adapterItem);
 
         view.hideEmpty();
-
-
     }
 
     public void removeItem(Note selectedNote) {
