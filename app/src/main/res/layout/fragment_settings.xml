@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,16 +8,110 @@
     tools:context=".ui.navdrawer.SettingsFragment">
 
     <com.google.android.material.textfield.TextInputEditText
-        android:layout_width="match_parent"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:editable="false" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:textColor="@android:color/darker_gray"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:text="@string/some_settings" />
-</FrameLayout>
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dim_100dp">
+
+        <TextView
+            android:id="@+id/radio_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/tv_radio_title"
+            android:textColor="@color/note_title"
+            android:textSize="@dimen/radio_title_size" />
+
+        <RadioGroup
+            android:id="@+id/radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dim_16dp">
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/rb_random_notes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dim_16dp"
+                android:text="@string/rb_random_notes"
+                android:textColor="@color/note_title"
+                android:textSize="@dimen/rb_size" />
+
+            <TextView
+                android:id="@+id/radio_random_notes_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/dim_40dp"
+                android:text="@string/tv_random_notes_description"
+                android:textColor="@color/note_title"
+                android:textSize="@dimen/rb_description_size"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/rb_internal_notes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dim_16dp"
+                android:text="@string/rb_internal_notes"
+                android:textColor="@color/note_title"
+                android:textSize="@dimen/rb_size" />
+
+            <TextView
+                android:id="@+id/radio_internal_notes_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/dim_40dp"
+                android:text="@string/tv_internal_notes_description"
+                android:textColor="@color/note_title"
+                android:textSize="@dimen/rb_description_size"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <com.google.android.material.radiobutton.MaterialRadioButton
+                android:id="@+id/rb_firebase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dim_16dp"
+                android:text="@string/rb_firebase"
+                android:textColor="@color/note_title"
+                android:textSize="@dimen/rb_size" />
+
+            <TextView
+                android:id="@+id/radio_firebase_notes_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/dim_40dp"
+                android:text="@string/tv_firebase_notes_description"
+                android:textColor="@color/note_title"
+                android:textSize="@dimen/rb_description_size"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_settings_save"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/dim_40dp"
+        android:text="@string/settings_save_button"
+        android:textColor="@color/note_title"
+        app:strokeColor="@color/note_title"
+        app:strokeWidth="@dimen/note_card_stroke_width"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

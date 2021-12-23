@@ -44,4 +44,12 @@
     <string name="change_grid_notes_list">change grid</string>
     <string name="delete_error_message">Impossible to delete unsaved note</string>
     <string name="path_name">/data/user/0/com.ineedyourcode.donotes/files/</string>
+    <string name="rb_firebase">FireBase</string>
+    <string name="tv_firebase_notes_description">описание</string>
+    <string name="tv_internal_notes_description">описание</string>
+    <string name="tv_random_notes_description">описание</string>
+    <string name="rb_internal_notes">Внутренняя память устройства</string>
+    <string name="rb_random_notes">Временные заметки</string>
+    <string name="settings_save_button">Сохранить</string>
+    <string name="tv_radio_title">Тип репозитория заметок:</string>
 </resources>
