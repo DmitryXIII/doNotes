@@ -1,5 +1,7 @@
 package com.ineedyourcode.donotes.ui.navdrawer;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,13 +17,14 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.ineedyourcode.donotes.R;
-import com.ineedyourcode.donotes.ui.MainActivity;
-import com.ineedyourcode.donotes.ui.list.NotesListFragment;
 
 public class SettingsFragment extends Fragment {
 
     public static final String KEY_RESULT = "SettingsFragment";
     public static final String ARG_BUTTON = "ARG_BUTTON";
+
+    private static final String APP_PREFERENCES = "SETTINGS";
+    private static final String APP_PREFERENCES_CHECKED_ID = "CHECKED_ID";
 
     public static final String TAG = "SettingsFragment";
 
@@ -42,8 +45,9 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        SharedPreferences mSettings = requireContext().getApplicationContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        mContainer = view.findViewById(R.id.radio_group);
+//        mContainer = view.findViewById(R.id.radio_group);
 
         btnSave = view.findViewById(R.id.btn_settings_save);
 
@@ -52,6 +56,27 @@ public class SettingsFragment extends Fragment {
         firebaseNotesDescription = view.findViewById(R.id.radio_firebase_notes_description);
 
         rg = view.findViewById(R.id.radio_group);
+
+        if (mSettings.contains(APP_PREFERENCES_CHECKED_ID)) {
+            selectedItemId = mSettings.getInt(APP_PREFERENCES_CHECKED_ID, selectedItemId);
+        } else {
+            selectedItemId = (R.id.rb_internal_notes);
+        }
+
+        rg.check(selectedItemId);
+
+        switch (selectedItemId) {
+            case R.id.rb_internal_notes:
+                internalNotesDescription.setVisibility(View.VISIBLE);
+                break;
+            case R.id.rb_firebase:
+                firebaseNotesDescription.setVisibility(View.VISIBLE);
+                break;
+            case R.id.rb_random_notes:
+                randomNotesDescription.setVisibility(View.VISIBLE);
+                break;
+        }
+
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -59,7 +84,7 @@ public class SettingsFragment extends Fragment {
                     case R.id.rb_random_notes:
                         selectedItemId = R.id.rb_random_notes;
 
-                        TransitionManager.beginDelayedTransition(mContainer);
+                        TransitionManager.beginDelayedTransition(rg);
 
                         randomNotesDescription.setVisibility(View.VISIBLE);
                         internalNotesDescription.setVisibility(View.GONE);
@@ -68,7 +93,7 @@ public class SettingsFragment extends Fragment {
                     case R.id.rb_internal_notes:
                         selectedItemId = R.id.rb_internal_notes;
 
-                        TransitionManager.beginDelayedTransition(mContainer);
+                        TransitionManager.beginDelayedTransition(rg);
 
                         randomNotesDescription.setVisibility(View.GONE);
                         internalNotesDescription.setVisibility(View.VISIBLE);
@@ -77,7 +102,7 @@ public class SettingsFragment extends Fragment {
                     case R.id.rb_firebase:
                         selectedItemId = R.id.rb_firebase;
 
-                        TransitionManager.beginDelayedTransition(mContainer);
+                        TransitionManager.beginDelayedTransition(rg);
 
                         randomNotesDescription.setVisibility(View.GONE);
                         internalNotesDescription.setVisibility(View.GONE);
@@ -93,7 +118,6 @@ public class SettingsFragment extends Fragment {
 
                 Bundle bundle = new Bundle();
                 bundle.putInt(ARG_BUTTON, selectedItemId);
-
                 getParentFragmentManager()
                         .setFragmentResult(KEY_RESULT, bundle);
 

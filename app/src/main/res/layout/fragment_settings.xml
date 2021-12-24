@@ -36,65 +36,35 @@
 
             <com.google.android.material.radiobutton.MaterialRadioButton
                 android:id="@+id/rb_random_notes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dim_16dp"
-                android:text="@string/rb_random_notes"
-                android:textColor="@color/note_title"
-                android:textSize="@dimen/rb_size" />
+                style="@style/RadioButton"
+                android:text="@string/rb_random_notes" />
 
             <TextView
                 android:id="@+id/radio_random_notes_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="@dimen/dim_40dp"
+                style="@style/RadioButtonDescription"
                 android:text="@string/tv_random_notes_description"
-                android:textColor="@color/note_title"
-                android:textSize="@dimen/rb_description_size"
-                android:visibility="gone"
                 tools:visibility="visible" />
 
             <com.google.android.material.radiobutton.MaterialRadioButton
                 android:id="@+id/rb_internal_notes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dim_16dp"
-                android:text="@string/rb_internal_notes"
-                android:textColor="@color/note_title"
-                android:textSize="@dimen/rb_size" />
+                style="@style/RadioButton"
+                android:text="@string/rb_internal_notes" />
 
             <TextView
                 android:id="@+id/radio_internal_notes_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="@dimen/dim_40dp"
+                style="@style/RadioButtonDescription"
                 android:text="@string/tv_internal_notes_description"
-                android:textColor="@color/note_title"
-                android:textSize="@dimen/rb_description_size"
-                android:visibility="gone"
                 tools:visibility="visible" />
 
             <com.google.android.material.radiobutton.MaterialRadioButton
                 android:id="@+id/rb_firebase"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/dim_16dp"
-                android:text="@string/rb_firebase"
-                android:textColor="@color/note_title"
-                android:textSize="@dimen/rb_size" />
+                style="@style/RadioButton"
+                android:text="@string/rb_firebase" />
 
             <TextView
                 android:id="@+id/radio_firebase_notes_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="@dimen/dim_40dp"
+                style="@style/RadioButtonDescription"
                 android:text="@string/tv_firebase_notes_description"
-                android:textColor="@color/note_title"
-                android:textSize="@dimen/rb_description_size"
-                android:visibility="gone"
                 tools:visibility="visible" />
         </RadioGroup>
     </LinearLayout>
@@ -108,10 +78,10 @@
         android:layout_margin="@dimen/dim_40dp"
         android:text="@string/settings_save_button"
         android:textColor="@color/note_title"
-        app:strokeColor="@color/note_title"
-        app:strokeWidth="@dimen/note_card_stroke_width"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:strokeColor="@color/note_title"
+        app:strokeWidth="@dimen/note_card_stroke_width" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

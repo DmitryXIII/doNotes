@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="RadioButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/rb_size</item>
+        <item name="buttonTint">@color/separator</item>
+        <item name="android:textColor">@color/note_title</item>
+        <item name="android:layout_marginHorizontal" tools:targetApi="o">@dimen/dim_16dp</item>
+    </style>
+
+    <style name="RadioButtonDescription">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/rb_description_size</item>
+        <item name="android:textColor">@color/note_title</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:visibility">gone</item>
+        <item name="android:layout_marginHorizontal" tools:targetApi="o">@dimen/dim_40dp</item>
+    </style>
+</resources>

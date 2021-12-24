@@ -70,11 +70,14 @@ public class InternalFileWriterRepository implements NotesRepository, InternalIO
 
     @Override
     public void update(String noteId, String title, String content, Callback<Note> callback) {
+
         int index = 0;
+        String prevTitle = null;
 
         for (int i = 0; i < result.size(); i++) {
             if (result.get(i).getId().equals(noteId)) {
                 index = i;
+                prevTitle = result.get(i).getTitle();
                 break;
             }
         }
@@ -83,6 +86,8 @@ public class InternalFileWriterRepository implements NotesRepository, InternalIO
 
         editableNote.setTitle(title);
         editableNote.setContent(content);
+
+        deleteNoteFile(prevTitle);
 
         saveNoteFile(title, content);
 
@@ -175,7 +180,7 @@ public class InternalFileWriterRepository implements NotesRepository, InternalIO
             System.out.println(e.getMessage());
         }
 
-        long milliseconds = attributes.creationTime().to(TimeUnit.MILLISECONDS);
+        long milliseconds = attributes.lastModifiedTime().to(TimeUnit.MILLISECONDS);
 
         if ((milliseconds > Long.MIN_VALUE) && (milliseconds < Long.MAX_VALUE)) {
             return new Date(attributes.creationTime().to(TimeUnit.MILLISECONDS));

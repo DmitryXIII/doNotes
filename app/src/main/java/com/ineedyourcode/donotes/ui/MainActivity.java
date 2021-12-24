@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements com.ineedyourcode
     private DrawerLayout navDrawer;
     public static final String APP_PREFERENCES = "SETTINGS";
     public static final String APP_PREFERENCES_REPO_MODE = "REPO_MODE";
+    private static final String APP_PREFERENCES_CHECKED_ID = "CHECKED_ID";
 
     SharedPreferences settings;
 
@@ -48,12 +49,15 @@ public class MainActivity extends AppCompatActivity implements com.ineedyourcode
                     public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                         if (result.getInt(SettingsFragment.ARG_BUTTON) == R.id.rb_internal_notes) {
                             editor.putString(APP_PREFERENCES_REPO_MODE, getString(R.string.repo_type_internal));
+                            editor.putInt(APP_PREFERENCES_CHECKED_ID, R.id.rb_internal_notes);
                             editor.apply();
                         } else if (result.getInt(SettingsFragment.ARG_BUTTON) == R.id.rb_firebase) {
                             editor.putString(APP_PREFERENCES_REPO_MODE, getString(R.string.repo_type_firebase));
+                            editor.putInt(APP_PREFERENCES_CHECKED_ID, R.id.rb_firebase);
                             editor.apply();
                         } else {
                             editor.putString(APP_PREFERENCES_REPO_MODE, getString(R.string.repo_type_random));
+                            editor.putInt(APP_PREFERENCES_CHECKED_ID, R.id.rb_random_notes);
                             editor.apply();
                         }
 

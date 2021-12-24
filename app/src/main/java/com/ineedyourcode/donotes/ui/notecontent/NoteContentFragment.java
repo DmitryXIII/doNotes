@@ -47,10 +47,6 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
     private BottomAppBar bar;
     private Note note;
 
-    public static NoteContentFragment addInstance() {
-        return new NoteContentFragment();
-    }
-
     public static NoteContentFragment updateInstance(Note note) {
         NoteContentFragment fragment = new NoteContentFragment();
         Bundle arguments = new Bundle();
@@ -75,6 +71,7 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
 
         SharedPreferences mSettings = requireContext().getApplicationContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         String repoType = mSettings.getString(APP_PREFERENCES_REPO_MODE, getString(R.string.repo_type_internal));
+
         if (repoType.equals(getString(R.string.repo_type_internal))) {
             if (getArguments() == null) {
                 presenter = new AddNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()));
@@ -91,14 +88,6 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
             }
         }
         txtRepoMode.setText(repoType);
-
-
-        /*if (getArguments() == null) {
-            presenter = new AddNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()));
-        } else {
-            note = getArguments().getParcelable(ARG_NOTE);
-            presenter = new UpdateNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()), note);
-        }*/
 
         bar = view.findViewById(R.id.bar);
 
@@ -124,7 +113,6 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
             }
             return false;
         });
-
 
         savingProgressBar = view.findViewById(R.id.saving_progress);
 
