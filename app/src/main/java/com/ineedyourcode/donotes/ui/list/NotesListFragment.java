@@ -32,12 +32,10 @@ import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.internalrepo.InternalFileWriterRepository;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.randomrepo.NotesRepositoryBuffer;
-import com.ineedyourcode.donotes.ui.MainActivity;
 import com.ineedyourcode.donotes.ui.adapter.AdapterItem;
 import com.ineedyourcode.donotes.ui.adapter.NoteAdapterItem;
 import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
-import com.ineedyourcode.donotes.ui.navdrawer.SettingsFragment;
 import com.ineedyourcode.donotes.ui.notecontent.AddNotePresenter;
 import com.ineedyourcode.donotes.ui.notecontent.NoteContentFragment;
 
@@ -62,8 +60,8 @@ public class NotesListFragment extends Fragment implements NotesListView {
         super.onCreate(savedInstanceState);
 
         SharedPreferences mSettings = requireContext().getApplicationContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        String s = mSettings.getString(APP_PREFERENCES_REPO_MODE, "internal");
-        if (s.equals("internal")) {
+        String repoType = mSettings.getString(APP_PREFERENCES_REPO_MODE, getString(R.string.repo_type_internal));
+        if (repoType.equals(getString(R.string.repo_type_internal))) {
             presenter = new NotesListPresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()));
         } else {
             presenter = new NotesListPresenter(this, NotesRepositoryBuffer.INSTANCE);
@@ -107,6 +105,24 @@ public class NotesListFragment extends Fragment implements NotesListView {
                         } else {
                             presenter.removeItem(selectedNote);
                         }
+                    }
+                });
+
+        getParentFragmentManager()
+                .setFragmentResultListener(AddNotePresenter.KEY, getViewLifecycleOwner(), new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                        Note note = result.getParcelable(AddNotePresenter.ARG_NOTE);
+                        presenter.onNoteAdded(note);
+                    }
+                });
+
+        getParentFragmentManager()
+                .setFragmentResultListener(UpdateNotePresenter.KEY, getViewLifecycleOwner(), new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                        Note note = result.getParcelable(UpdateNotePresenter.ARG_NOTE);
+                        presenter.onNoteUpdate(note);
                     }
                 });
 
@@ -182,25 +198,6 @@ public class NotesListFragment extends Fragment implements NotesListView {
         });
 
         presenter.requestNotes();
-
-        getParentFragmentManager()
-                .setFragmentResultListener(AddNotePresenter.KEY, getViewLifecycleOwner(), new FragmentResultListener() {
-                    @Override
-                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                        Note note = result.getParcelable(AddNotePresenter.ARG_NOTE);
-
-                        presenter.onNoteAdded(note);
-                    }
-                });
-
-        getParentFragmentManager()
-                .setFragmentResultListener(UpdateNotePresenter.KEY, getViewLifecycleOwner(), new FragmentResultListener() {
-                    @Override
-                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                        Note note = result.getParcelable(UpdateNotePresenter.ARG_NOTE);
-
-                    }
-                });
     }
 
     @Override
@@ -242,6 +239,13 @@ public class NotesListFragment extends Fragment implements NotesListView {
         int index = adapter.removeItem(selectedNote);
 
         adapter.notifyItemRemoved(index);
+    }
+
+    @Override
+    public void onNoteUpdated(NoteAdapterItem adapterItem) {
+        int index = adapter.updateItem(adapterItem);
+
+        adapter.notifyItemChanged(index);
     }
 
     private void showAlertFragmentDialog(String message) {

@@ -21,4 +21,6 @@ public interface NotesListView {
     void onNoteAdded(NoteAdapterItem adapterItem);
 
     void onNoteRemoved(Note selectedNote);
+
+    void onNoteUpdated(NoteAdapterItem adapterItem);
 }

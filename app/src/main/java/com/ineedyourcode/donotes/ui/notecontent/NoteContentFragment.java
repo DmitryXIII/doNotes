@@ -30,7 +30,6 @@ import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
 import com.ineedyourcode.donotes.ui.dialogalert.BottomDialogFragment;
 import com.ineedyourcode.donotes.ui.list.NotePresenter;
-import com.ineedyourcode.donotes.ui.list.NotesListPresenter;
 import com.ineedyourcode.donotes.ui.list.UpdateNotePresenter;
 
 public class NoteContentFragment extends Fragment implements AddNoteView {
@@ -75,8 +74,8 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
         fab = view.findViewById(R.id.fab);
 
         SharedPreferences mSettings = requireContext().getApplicationContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        String s = mSettings.getString(APP_PREFERENCES_REPO_MODE, "internal");
-        if (s.equals("internal")) {
+        String repoType = mSettings.getString(APP_PREFERENCES_REPO_MODE, getString(R.string.repo_type_internal));
+        if (repoType.equals(getString(R.string.repo_type_internal))) {
             if (getArguments() == null) {
                 presenter = new AddNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()));
             } else {
@@ -91,7 +90,7 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
                 presenter = new UpdateNotePresenter(this, NotesRepositoryBuffer.INSTANCE, note);
             }
         }
-        txtRepoMode.setText(s);
+        txtRepoMode.setText(repoType);
 
 
         /*if (getArguments() == null) {

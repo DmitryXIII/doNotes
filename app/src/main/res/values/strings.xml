@@ -52,4 +52,7 @@
     <string name="rb_random_notes">Временные заметки</string>
     <string name="settings_save_button">Сохранить</string>
     <string name="tv_radio_title">Тип репозитория заметок:</string>
+    <string name="repo_type_internal">internal</string>
+    <string name="repo_type_firebase">firebase</string>
+    <string name="repo_type_random">random</string>
 </resources>

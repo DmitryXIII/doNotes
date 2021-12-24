@@ -1,6 +1,5 @@
 package com.ineedyourcode.donotes.domain.internalrepo;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.widget.Toast;
@@ -104,7 +103,7 @@ public class InternalFileWriterRepository implements NotesRepository, InternalIO
         Date createAt;
 
         File file = new File(context.getString(R.string.path_name));
-        if(!file.exists())     {
+        if (!file.exists()) {
             file.mkdirs();
         }
         for (File listFile : file.listFiles()) {
