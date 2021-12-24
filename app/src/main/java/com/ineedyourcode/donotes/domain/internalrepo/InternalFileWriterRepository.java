@@ -102,7 +102,11 @@ public class InternalFileWriterRepository implements NotesRepository, InternalIO
         String noteTitle;
         String noteContent;
         Date createAt;
+
         File file = new File(context.getString(R.string.path_name));
+        if(!file.exists())     {
+            file.mkdirs();
+        }
         for (File listFile : file.listFiles()) {
             if (listFile.isFile()) {
                 noteTitle = listFile.getName().substring(0, (listFile.getName().length() - 4));

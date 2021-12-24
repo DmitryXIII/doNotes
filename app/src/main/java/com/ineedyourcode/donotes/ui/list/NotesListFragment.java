@@ -47,8 +47,8 @@ import java.util.List;
 public class NotesListFragment extends Fragment implements NotesListView {
     public static String ARG_NOTE = "ARG_NOTE";
     public static String RESULT_KEY = "NotesListFragment_RESULT";
-    public static final String APP_PREFERENCES = "SETTINGS";
-    public static final String APP_PREFERENCES_REPO_MODE = "REPO_MODE";
+    private static final String APP_PREFERENCES = "SETTINGS";
+    private static final String APP_PREFERENCES_REPO_MODE = "REPO_MODE";
 
     private RecyclerView notesContainer;
     private NotesListPresenter presenter;
@@ -57,14 +57,12 @@ public class NotesListFragment extends Fragment implements NotesListView {
     private TextView emptyMessage;
     private Note selectedNote;
 
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         SharedPreferences mSettings = requireContext().getApplicationContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        String s = mSettings.getString(APP_PREFERENCES_REPO_MODE, "");
+        String s = mSettings.getString(APP_PREFERENCES_REPO_MODE, "internal");
         if (s.equals("internal")) {
             presenter = new NotesListPresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()));
         } else {
@@ -98,20 +96,6 @@ public class NotesListFragment extends Fragment implements NotesListView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        /*getParentFragmentManager()
-                .setFragmentResultListener(SettingsFragment.KEY_RESULT, this, new FragmentResultListener() {
-                    @Override
-                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                        if (result.getInt(SettingsFragment.ARG_BUTTON) == R.id.rb_internal_notes) {
-                            presenter = new NotesListPresenter(NotesListFragment.this, InternalFileWriterRepository.getINSTANCE(requireContext()));
-                            presenter.requestNotes();
-                        } else {
-                            presenter = new NotesListPresenter(NotesListFragment.this, NotesRepositoryBuffer.INSTANCE);
-                            presenter.requestNotes();
-                        }
-                    }
-                });*/
 
         getParentFragmentManager()
                 .setFragmentResultListener(NoteContentFragment.KEY_RESULT, this, new FragmentResultListener() {

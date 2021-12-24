@@ -3,12 +3,14 @@ package com.ineedyourcode.donotes.ui.notecontent;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,15 +25,20 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.internalrepo.InternalFileWriterRepository;
 import com.ineedyourcode.donotes.domain.Note;
+import com.ineedyourcode.donotes.domain.randomrepo.NotesRepositoryBuffer;
 import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
 import com.ineedyourcode.donotes.ui.dialogalert.BottomDialogFragment;
 import com.ineedyourcode.donotes.ui.list.NotePresenter;
+import com.ineedyourcode.donotes.ui.list.NotesListPresenter;
 import com.ineedyourcode.donotes.ui.list.UpdateNotePresenter;
 
 public class NoteContentFragment extends Fragment implements AddNoteView {
     public static String ARG_NOTE = "ARG_NOTE";
     public static String KEY_RESULT = "NoteContentFragment";
+
+    public static final String APP_PREFERENCES = "SETTINGS";
+    public static final String APP_PREFERENCES_REPO_MODE = "REPO_MODE";
 
     private FloatingActionButton fab;
     private ProgressBar savingProgressBar;
@@ -62,16 +69,37 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        TextView txtRepoMode = view.findViewById(R.id.txt_repo_mode);
         noteTitle = view.findViewById(R.id.txt_note_title);
         noteContent = view.findViewById(R.id.txt_note_content);
         fab = view.findViewById(R.id.fab);
 
-        if (getArguments() == null) {
+        SharedPreferences mSettings = requireContext().getApplicationContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String s = mSettings.getString(APP_PREFERENCES_REPO_MODE, "internal");
+        if (s.equals("internal")) {
+            if (getArguments() == null) {
+                presenter = new AddNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()));
+            } else {
+                note = getArguments().getParcelable(ARG_NOTE);
+                presenter = new UpdateNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()), note);
+            }
+        } else {
+            if (getArguments() == null) {
+                presenter = new AddNotePresenter(this, NotesRepositoryBuffer.INSTANCE);
+            } else {
+                note = getArguments().getParcelable(ARG_NOTE);
+                presenter = new UpdateNotePresenter(this, NotesRepositoryBuffer.INSTANCE, note);
+            }
+        }
+        txtRepoMode.setText(s);
+
+
+        /*if (getArguments() == null) {
             presenter = new AddNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()));
         } else {
             note = getArguments().getParcelable(ARG_NOTE);
             presenter = new UpdateNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()), note);
-        }
+        }*/
 
         bar = view.findViewById(R.id.bar);
 

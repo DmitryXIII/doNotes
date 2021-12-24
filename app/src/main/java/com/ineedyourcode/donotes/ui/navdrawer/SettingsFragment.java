@@ -87,7 +87,7 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-       btnSave.setOnClickListener(new View.OnClickListener() {
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 

@@ -31,11 +31,6 @@ public class MainActivity extends AppCompatActivity implements com.ineedyourcode
     private DrawerLayout navDrawer;
     public static final String APP_PREFERENCES = "SETTINGS";
     public static final String APP_PREFERENCES_REPO_MODE = "REPO_MODE";
-    public static String repoMode;
-
-    public static String getRepoMode() {
-        return repoMode;
-    }
 
     SharedPreferences settings;
 
@@ -47,23 +42,21 @@ public class MainActivity extends AppCompatActivity implements com.ineedyourcode
         settings = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = settings.edit();
 
-        if (settings.contains(APP_PREFERENCES_REPO_MODE)) {
-            repoMode = settings.getString(APP_PREFERENCES_REPO_MODE, "random");
-        }
-
         getSupportFragmentManager()
                 .setFragmentResultListener(SettingsFragment.KEY_RESULT, this, new FragmentResultListener() {
                     @Override
                     public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                         if (result.getInt(SettingsFragment.ARG_BUTTON) == R.id.rb_internal_notes) {
-                            repoMode = "internal";
-                            editor.putString(APP_PREFERENCES_REPO_MODE, repoMode);
+                            editor.putString(APP_PREFERENCES_REPO_MODE, "internal");
+                            editor.apply();
+                        } else if (result.getInt(SettingsFragment.ARG_BUTTON) == R.id.rb_firebase) {
+                            editor.putString(APP_PREFERENCES_REPO_MODE, "firebase");
                             editor.apply();
                         } else {
-                            repoMode = "random";
-                            editor.putString(APP_PREFERENCES_REPO_MODE, repoMode);
+                            editor.putString(APP_PREFERENCES_REPO_MODE, "random");
                             editor.apply();
                         }
+
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.fragment_container, new NotesListFragment())
