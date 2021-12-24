@@ -65,6 +65,7 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
         noteTitle = view.findViewById(R.id.txt_note_title);
         noteContent = view.findViewById(R.id.txt_note_content);
         fab = view.findViewById(R.id.fab);
+
         if (getArguments() == null) {
             presenter = new AddNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()));
         } else {

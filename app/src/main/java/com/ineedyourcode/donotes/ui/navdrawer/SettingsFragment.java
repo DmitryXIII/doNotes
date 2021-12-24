@@ -15,6 +15,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.ineedyourcode.donotes.R;
+import com.ineedyourcode.donotes.ui.MainActivity;
 import com.ineedyourcode.donotes.ui.list.NotesListFragment;
 
 public class SettingsFragment extends Fragment {
@@ -86,7 +87,7 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-       /* btnSave.setOnClickListener(new View.OnClickListener() {
+       btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -95,7 +96,9 @@ public class SettingsFragment extends Fragment {
 
                 getParentFragmentManager()
                         .setFragmentResult(KEY_RESULT, bundle);
+
+                requireActivity().onBackPressed();
             }
-        });*/
+        });
     }
 }

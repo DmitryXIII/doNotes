@@ -1,15 +1,19 @@
 package com.ineedyourcode.donotes.ui;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.navigation.NavigationView;
@@ -20,15 +24,53 @@ import com.ineedyourcode.donotes.ui.navdrawer.SettingsFragment;
 import com.ineedyourcode.donotes.ui.list.NotesListFragment;
 import com.ineedyourcode.donotes.ui.notecontent.NoteContentFragment;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity implements com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter {
     private static String ARG_NOTE = "ARG_NOTE";
     private Note selectedNote;
     private DrawerLayout navDrawer;
+    public static final String APP_PREFERENCES = "SETTINGS";
+    public static final String APP_PREFERENCES_REPO_MODE = "REPO_MODE";
+    public static String repoMode;
+
+    public static String getRepoMode() {
+        return repoMode;
+    }
+
+    SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        settings = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+
+        if (settings.contains(APP_PREFERENCES_REPO_MODE)) {
+            repoMode = settings.getString(APP_PREFERENCES_REPO_MODE, "random");
+        }
+
+        getSupportFragmentManager()
+                .setFragmentResultListener(SettingsFragment.KEY_RESULT, this, new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                        if (result.getInt(SettingsFragment.ARG_BUTTON) == R.id.rb_internal_notes) {
+                            repoMode = "internal";
+                            editor.putString(APP_PREFERENCES_REPO_MODE, repoMode);
+                            editor.apply();
+                        } else {
+                            repoMode = "random";
+                            editor.putString(APP_PREFERENCES_REPO_MODE, repoMode);
+                            editor.apply();
+                        }
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_container, new NotesListFragment())
+                                .commit();
+                    }
+                });
+
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             getSupportFragmentManager()
