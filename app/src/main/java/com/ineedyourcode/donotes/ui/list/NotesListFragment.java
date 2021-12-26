@@ -29,6 +29,7 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.ineedyourcode.donotes.R;
+import com.ineedyourcode.donotes.domain.firestore.FirestoreNotesRepository;
 import com.ineedyourcode.donotes.domain.internalrepo.InternalFileWriterRepository;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.randomrepo.NotesRepositoryBuffer;
@@ -54,15 +55,20 @@ public class NotesListFragment extends Fragment implements NotesListView {
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView emptyMessage;
     private Note selectedNote;
+    private View thisView;
+    private String repoType;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         SharedPreferences mSettings = requireContext().getApplicationContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        String repoType = mSettings.getString(APP_PREFERENCES_REPO_MODE, getString(R.string.repo_type_internal));
-        if (repoType.equals(getString(R.string.repo_type_internal))) {
+        repoType = mSettings.getString(APP_PREFERENCES_REPO_MODE, getString(R.string.rb_internal_notes));
+
+        if (repoType.equals(getString(R.string.rb_internal_notes))) {
             presenter = new NotesListPresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()));
+        } else if (repoType.equals(getString(R.string.rb_firestore))) {
+            presenter = new NotesListPresenter(this, FirestoreNotesRepository.INSTANCE);
         } else {
             presenter = new NotesListPresenter(this, NotesRepositoryBuffer.INSTANCE);
         }
@@ -94,6 +100,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        thisView = view;
 
         getParentFragmentManager()
                 .setFragmentResultListener(NoteContentFragment.KEY_RESULT, this, new FragmentResultListener() {
@@ -104,6 +111,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
                             Toast.makeText(requireContext(), getString(R.string.delete_error_message), Toast.LENGTH_SHORT).show();
                         } else {
                             presenter.removeItem(selectedNote);
+                            showSnack(getString(R.string.note_deleted_message));
                         }
                     }
                 });
@@ -266,9 +274,17 @@ public class NotesListFragment extends Fragment implements NotesListView {
         if (item.getItemId() == R.id.action_delete) {
             presenter.removeItem(selectedNote);
 
-            Toast.makeText(requireContext(), "Delete " + selectedNote.getTitle(), Toast.LENGTH_SHORT).show();
+            showSnack(getString(R.string.note_deleted_message));
+            return true;
         }
 
         return super.onContextItemSelected(item);
+    }
+
+    private void showSnack(String message) {
+        Snackbar snackbar = Snackbar.make(thisView, message, Snackbar.LENGTH_SHORT);
+        snackbar.getView().setBackgroundColor(requireContext().getColor(R.color.note_title));
+        snackbar.setTextColor(requireContext().getColor(R.color.background_dark));
+        snackbar.show();
     }
 }

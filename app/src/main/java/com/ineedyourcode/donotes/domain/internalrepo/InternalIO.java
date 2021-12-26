@@ -1,10 +1,14 @@
 package com.ineedyourcode.donotes.domain.internalrepo;
 
 import android.content.Context;
+
+import com.ineedyourcode.donotes.domain.Note;
+
+import java.util.ArrayList;
 import java.util.Date;
 
 public interface InternalIO {
-    void filesToNotesList();
+    ArrayList<Note> filesToNotesList();
 
     void saveNoteFile(String noteTitle, String noteContent);
 

@@ -45,11 +45,11 @@ public class InternalFileWriterRepository implements NotesRepository, InternalIO
 
     public InternalFileWriterRepository(Context context) {
         this.context = context.getApplicationContext();
-        filesToNotesList();
     }
 
     @Override
     public void getAll(Callback<List<Note>> callback) {
+        result = filesToNotesList();
         callback.onSuccess(result);
     }
 
@@ -69,13 +69,13 @@ public class InternalFileWriterRepository implements NotesRepository, InternalIO
     }
 
     @Override
-    public void update(String noteId, String title, String content, Callback<Note> callback) {
+    public void update(Note note, String title, String content, Callback<Note> callback) {
 
         int index = 0;
         String prevTitle = null;
 
         for (int i = 0; i < result.size(); i++) {
-            if (result.get(i).getId().equals(noteId)) {
+            if (result.get(i).getId().equals(note.getId())) {
                 index = i;
                 prevTitle = result.get(i).getTitle();
                 break;
@@ -91,6 +91,8 @@ public class InternalFileWriterRepository implements NotesRepository, InternalIO
 
         saveNoteFile(title, content);
 
+        editableNote.setCreatedAt(getNoteFileCreateDate(editableNote.getTitle()));
+
         callback.onSuccess(editableNote);
     }
 
@@ -102,10 +104,11 @@ public class InternalFileWriterRepository implements NotesRepository, InternalIO
     }
 
     @Override
-    public void filesToNotesList() {
+    public ArrayList<Note> filesToNotesList() {
         String noteTitle;
         String noteContent;
         Date createAt;
+        ArrayList<Note> result = new ArrayList<>();
 
         File file = new File(context.getString(R.string.path_name));
         if (!file.exists()) {
@@ -119,6 +122,7 @@ public class InternalFileWriterRepository implements NotesRepository, InternalIO
                 result.add(new Note(UUID.randomUUID().toString(), noteTitle, noteContent, createAt));
             }
         }
+        return result;
     }
 
     @Override

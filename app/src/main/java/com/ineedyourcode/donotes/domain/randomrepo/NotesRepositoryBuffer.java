@@ -93,7 +93,7 @@ public class NotesRepositoryBuffer implements NotesRepository {
     }
 
     @Override
-    public void update(String noteId, String title, String content, Callback<Note> callback) {
+    public void update(Note note, String title, String content, Callback<Note> callback) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -110,7 +110,7 @@ public class NotesRepositoryBuffer implements NotesRepository {
                         int index = 0;
 
                         for (int i = 0; i < notes.size(); i++) {
-                            if (notes.get(i).getId().equals(noteId)) {
+                            if (notes.get(i).getId().equals(note.getId())) {
                                 index = i;
                                 break;
                             }

@@ -57,14 +57,14 @@
                 tools:visibility="visible" />
 
             <com.google.android.material.radiobutton.MaterialRadioButton
-                android:id="@+id/rb_firebase"
+                android:id="@+id/rb_firestore"
                 style="@style/RadioButton"
-                android:text="@string/rb_firebase" />
+                android:text="@string/rb_firestore" />
 
             <TextView
-                android:id="@+id/radio_firebase_notes_description"
+                android:id="@+id/radio_firestore_notes_description"
                 style="@style/RadioButtonDescription"
-                android:text="@string/tv_firebase_notes_description"
+                android:text="@string/tv_firestore_notes_description"
                 tools:visibility="visible" />
         </RadioGroup>
     </LinearLayout>

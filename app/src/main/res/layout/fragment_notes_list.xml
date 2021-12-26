@@ -19,16 +19,16 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresher"
-        android:foregroundTint="@color/note_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/note_title">
+        android:backgroundTint="@color/note_title"
+        android:foregroundTint="@color/note_title">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/notes_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/recycler_view_padding_bottom"/>
+            android:paddingBottom="@dimen/recycler_view_padding_bottom" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.bottomappbar.BottomAppBar

@@ -77,6 +77,10 @@ public class Note implements Parcelable {
         this.content = content;
     }
 
+    public void setCreatedAt(Date date) {
+        this.createdAt = date;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

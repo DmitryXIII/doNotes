@@ -24,9 +24,9 @@ public class AddNotePresenter implements NotePresenter {
     }
 
     @Override
-    public void onActionPressed(String title, String message) {
+    public void onActionPressed(String title, String content) {
         view.showProgress();
-        repository.save(title, message, new Callback<Note>() {
+        repository.save(title, content, new Callback<Note>() {
             @Override
             public void onSuccess(Note result) {
                 view.hideProgress();

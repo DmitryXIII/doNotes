@@ -30,8 +30,7 @@ public class SettingsFragment extends Fragment {
 
     private TextView randomNotesDescription;
     private TextView internalNotesDescription;
-    private TextView firebaseNotesDescription;
-    private ViewGroup mContainer;
+    private TextView firestoreNotesDescription;
     private RadioGroup rg;
     private Button btnSave;
     private int selectedItemId;
@@ -47,13 +46,11 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         SharedPreferences mSettings = requireContext().getApplicationContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-//        mContainer = view.findViewById(R.id.radio_group);
-
         btnSave = view.findViewById(R.id.btn_settings_save);
 
         randomNotesDescription = view.findViewById(R.id.radio_random_notes_description);
         internalNotesDescription = view.findViewById(R.id.radio_internal_notes_description);
-        firebaseNotesDescription = view.findViewById(R.id.radio_firebase_notes_description);
+        firestoreNotesDescription = view.findViewById(R.id.radio_firestore_notes_description);
 
         rg = view.findViewById(R.id.radio_group);
 
@@ -69,8 +66,8 @@ public class SettingsFragment extends Fragment {
             case R.id.rb_internal_notes:
                 internalNotesDescription.setVisibility(View.VISIBLE);
                 break;
-            case R.id.rb_firebase:
-                firebaseNotesDescription.setVisibility(View.VISIBLE);
+            case R.id.rb_firestore:
+                firestoreNotesDescription.setVisibility(View.VISIBLE);
                 break;
             case R.id.rb_random_notes:
                 randomNotesDescription.setVisibility(View.VISIBLE);
@@ -88,7 +85,7 @@ public class SettingsFragment extends Fragment {
 
                         randomNotesDescription.setVisibility(View.VISIBLE);
                         internalNotesDescription.setVisibility(View.GONE);
-                        firebaseNotesDescription.setVisibility(View.GONE);
+                        firestoreNotesDescription.setVisibility(View.GONE);
                         break;
                     case R.id.rb_internal_notes:
                         selectedItemId = R.id.rb_internal_notes;
@@ -97,16 +94,16 @@ public class SettingsFragment extends Fragment {
 
                         randomNotesDescription.setVisibility(View.GONE);
                         internalNotesDescription.setVisibility(View.VISIBLE);
-                        firebaseNotesDescription.setVisibility(View.GONE);
+                        firestoreNotesDescription.setVisibility(View.GONE);
                         break;
-                    case R.id.rb_firebase:
-                        selectedItemId = R.id.rb_firebase;
+                    case R.id.rb_firestore:
+                        selectedItemId = R.id.rb_firestore;
 
                         TransitionManager.beginDelayedTransition(rg);
 
                         randomNotesDescription.setVisibility(View.GONE);
                         internalNotesDescription.setVisibility(View.GONE);
-                        firebaseNotesDescription.setVisibility(View.VISIBLE);
+                        firestoreNotesDescription.setVisibility(View.VISIBLE);
                         break;
                 }
             }

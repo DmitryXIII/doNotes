@@ -22,7 +22,9 @@ import androidx.fragment.app.FragmentResultListener;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.ineedyourcode.donotes.R;
+import com.ineedyourcode.donotes.domain.firestore.FirestoreNotesRepository;
 import com.ineedyourcode.donotes.domain.internalrepo.InternalFileWriterRepository;
 import com.ineedyourcode.donotes.domain.Note;
 import com.ineedyourcode.donotes.domain.randomrepo.NotesRepositoryBuffer;
@@ -46,6 +48,8 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
     private EditText noteContent;
     private BottomAppBar bar;
     private Note note;
+    private View thisView;
+    private TextView repoMode;
 
     public static NoteContentFragment updateInstance(Note note) {
         NoteContentFragment fragment = new NoteContentFragment();
@@ -64,20 +68,27 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView txtRepoMode = view.findViewById(R.id.txt_repo_mode);
+        thisView = view;
         noteTitle = view.findViewById(R.id.txt_note_title);
         noteContent = view.findViewById(R.id.txt_note_content);
         fab = view.findViewById(R.id.fab);
 
         SharedPreferences mSettings = requireContext().getApplicationContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        String repoType = mSettings.getString(APP_PREFERENCES_REPO_MODE, getString(R.string.repo_type_internal));
+        String repoType = mSettings.getString(APP_PREFERENCES_REPO_MODE, getString(R.string.rb_internal_notes));
 
-        if (repoType.equals(getString(R.string.repo_type_internal))) {
+        if (repoType.equals(getString(R.string.rb_internal_notes))) {
             if (getArguments() == null) {
                 presenter = new AddNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()));
             } else {
                 note = getArguments().getParcelable(ARG_NOTE);
                 presenter = new UpdateNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()), note);
+            }
+        } else if (repoType.equals(getString(R.string.rb_firestore))) {
+            if (getArguments() == null) {
+                presenter = new AddNotePresenter(this, FirestoreNotesRepository.INSTANCE);
+            } else {
+                note = getArguments().getParcelable(ARG_NOTE);
+                presenter = new UpdateNotePresenter(this, FirestoreNotesRepository.INSTANCE, note);
             }
         } else {
             if (getArguments() == null) {
@@ -87,7 +98,6 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
                 presenter = new UpdateNotePresenter(this, NotesRepositoryBuffer.INSTANCE, note);
             }
         }
-        txtRepoMode.setText(repoType);
 
         bar = view.findViewById(R.id.bar);
 
@@ -120,6 +130,12 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
             hideKeyboardFrom(requireContext(), noteTitle);
             hideKeyboardFrom(requireContext(), noteContent);
             presenter.onActionPressed(noteTitle.getText().toString(), noteContent.getText().toString());
+
+            if (getArguments() == null) {
+                showSnack(getString(R.string.message_new_note_added));
+            } else {
+                showSnack(getString(R.string.message_note_updated));
+            }
         });
     }
 
@@ -212,5 +228,12 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
     public void actionCompleted(String key, Bundle bundle) {
         getParentFragmentManager()
                 .setFragmentResult(key, bundle);
+    }
+
+    private void showSnack(String message) {
+        Snackbar snackbar = Snackbar.make(thisView, message, Snackbar.LENGTH_SHORT);
+        snackbar.getView().setBackgroundColor(requireContext().getColor(R.color.note_title));
+        snackbar.setTextColor(requireContext().getColor(R.color.background_dark));
+        snackbar.show();
     }
 }
