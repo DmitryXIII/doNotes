@@ -1,7 +1,11 @@
-package com.ineedyourcode.donotes.domain;
+package com.ineedyourcode.donotes.domain.randomrepo;
 
 import android.os.Handler;
 import android.os.Looper;
+
+import com.ineedyourcode.donotes.domain.Callback;
+import com.ineedyourcode.donotes.domain.Note;
+import com.ineedyourcode.donotes.domain.NotesRepository;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -64,7 +68,7 @@ public class NotesRepositoryBuffer implements NotesRepository {
     }
 
     @Override
-    public void save(String title, String message, Callback<Note> callback) {
+    public void save(String title, String content, Callback<Note> callback) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -77,7 +81,7 @@ public class NotesRepositoryBuffer implements NotesRepository {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Note note = new Note(UUID.randomUUID().toString(), title, message, new Date());
+                        Note note = new Note(UUID.randomUUID().toString(), title, content, new Date());
 
                         notes.add(note);
 
@@ -89,7 +93,7 @@ public class NotesRepositoryBuffer implements NotesRepository {
     }
 
     @Override
-    public void update(String noteId, String title, String message, Callback<Note> callback) {
+    public void update(Note note, String title, String content, Callback<Note> callback) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -106,7 +110,7 @@ public class NotesRepositoryBuffer implements NotesRepository {
                         int index = 0;
 
                         for (int i = 0; i < notes.size(); i++) {
-                            if (notes.get(i).getId().equals(noteId)) {
+                            if (notes.get(i).getId().equals(note.getId())) {
                                 index = i;
                                 break;
                             }
@@ -115,7 +119,7 @@ public class NotesRepositoryBuffer implements NotesRepository {
                         Note editableNote = notes.get(index);
 
                         editableNote.setTitle(title);
-                        editableNote.setContent(message);
+                        editableNote.setContent(content);
 
                         callback.onSuccess(editableNote);
                     }

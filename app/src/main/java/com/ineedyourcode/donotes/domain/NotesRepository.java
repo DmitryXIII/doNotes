@@ -1,7 +1,5 @@
 package com.ineedyourcode.donotes.domain;
 
-import android.content.Context;
-
 import java.util.List;
 
 public interface NotesRepository {
@@ -9,7 +7,7 @@ public interface NotesRepository {
 
     void save (String title, String message, Callback<Note> callback);
 
-    void update (String noteId, String title, String message, Callback<Note> callback);
+    void update (Note note, String title, String message, Callback<Note> callback);
 
     void delete (Note note, Callback<Void> callback);
 }

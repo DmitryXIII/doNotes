@@ -43,4 +43,22 @@
     <string name="new_note_content">New note content</string>
     <string name="change_grid_notes_list">change grid</string>
     <string name="delete_error_message">Impossible to delete unsaved note</string>
+    <string name="path_name">/data/user/0/com.ineedyourcode.donotes/files/</string>
+    <string name="rb_firestore">Firestore</string>
+    <string name="tv_firestore_notes_description">Заметки хранятся в облачной NoSQL базе данных Cloud Firestore</string>
+    <string name="tv_internal_notes_description">Заметки хранятся во внутренней памяти устройства в файлах *.txt</string>
+    <string name="tv_random_notes_description">Временно создаваемые заметки. Все произведенные с ними действия не сохраняются при выходе из приложения</string>
+    <string name="rb_internal_notes">Внутренняя память устройства</string>
+    <string name="rb_random_notes">Временные заметки</string>
+    <string name="settings_save_button">Сохранить</string>
+    <string name="tv_radio_title">Тип репозитория заметок:</string>
+    <string name="message_new_note_added">New note added</string>
+    <string name="message_note_updated">Note updated</string>
+    <string name="notification_name">doNotes</string>
+    <string name="notification_new_note">Новая заметка </string>
+    <string name="notification_note_edited">Изменена заметка </string>
+    <string name="notification_note_deleted">Удалена заметка </string>
+    <string name="failed">\"FAILED: \"</string>
+    <string name="channel_description">Изменение заметок в Firestore</string>
+    <string name="channel_name">Firestore repository</string>
 </resources>

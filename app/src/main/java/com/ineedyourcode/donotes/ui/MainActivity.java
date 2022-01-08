@@ -1,34 +1,81 @@
 package com.ineedyourcode.donotes.ui;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationChannelCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.google.android.material.navigation.NavigationView;
+import com.ineedyourcode.donotes.DoNotesApp;
 import com.ineedyourcode.donotes.R;
 import com.ineedyourcode.donotes.domain.Note;
+import com.ineedyourcode.donotes.domain.firestore.FirestoreNotesRepository;
 import com.ineedyourcode.donotes.ui.navdrawer.AboutAppFragment;
 import com.ineedyourcode.donotes.ui.navdrawer.SettingsFragment;
 import com.ineedyourcode.donotes.ui.list.NotesListFragment;
 import com.ineedyourcode.donotes.ui.notecontent.NoteContentFragment;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class MainActivity extends AppCompatActivity implements com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter {
     private static String ARG_NOTE = "ARG_NOTE";
     private Note selectedNote;
     private DrawerLayout navDrawer;
+    public static final String APP_PREFERENCES = "SETTINGS";
+    public static final String APP_PREFERENCES_REPO_MODE = "REPO_MODE";
+    private static final String APP_PREFERENCES_CHECKED_ID = "CHECKED_ID";
+
+    SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        settings = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+
+        getSupportFragmentManager()
+                .setFragmentResultListener(SettingsFragment.KEY_RESULT, this, new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                        if (result.getInt(SettingsFragment.ARG_BUTTON) == R.id.rb_internal_notes) {
+                            editor.putString(APP_PREFERENCES_REPO_MODE, getString(R.string.rb_internal_notes));
+                            editor.putInt(APP_PREFERENCES_CHECKED_ID, R.id.rb_internal_notes);
+                            editor.apply();
+                        } else if (result.getInt(SettingsFragment.ARG_BUTTON) == R.id.rb_firestore) {
+                            editor.putString(APP_PREFERENCES_REPO_MODE, getString(R.string.rb_firestore));
+                            editor.putInt(APP_PREFERENCES_CHECKED_ID, R.id.rb_firestore);
+                            editor.apply();
+                        } else {
+                            editor.putString(APP_PREFERENCES_REPO_MODE, getString(R.string.rb_random_notes));
+                            editor.putInt(APP_PREFERENCES_CHECKED_ID, R.id.rb_random_notes);
+                            editor.apply();
+                        }
+
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_container, new NotesListFragment())
+                                .commit();
+                    }
+                });
+
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             getSupportFragmentManager()

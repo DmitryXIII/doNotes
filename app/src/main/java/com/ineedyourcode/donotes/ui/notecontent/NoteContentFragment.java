@@ -3,24 +3,31 @@ package com.ineedyourcode.donotes.ui.notecontent;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.ineedyourcode.donotes.R;
+import com.ineedyourcode.donotes.domain.firestore.FirestoreNotesRepository;
+import com.ineedyourcode.donotes.domain.internalrepo.InternalFileWriterRepository;
 import com.ineedyourcode.donotes.domain.Note;
-import com.ineedyourcode.donotes.domain.NotesRepositoryBuffer;
+import com.ineedyourcode.donotes.domain.randomrepo.NotesRepositoryBuffer;
 import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
 import com.ineedyourcode.donotes.ui.dialogalert.AlertDialogFragment;
 import com.ineedyourcode.donotes.ui.dialogalert.BottomDialogFragment;
@@ -31,18 +38,18 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
     public static String ARG_NOTE = "ARG_NOTE";
     public static String KEY_RESULT = "NoteContentFragment";
 
+    public static final String APP_PREFERENCES = "SETTINGS";
+    public static final String APP_PREFERENCES_REPO_MODE = "REPO_MODE";
+
     private FloatingActionButton fab;
     private ProgressBar savingProgressBar;
     private NotePresenter presenter;
-    EditText noteTitle;
-    EditText noteContent;
-    BottomAppBar bar;
-
-    Note note;
-
-    public static NoteContentFragment addInstance() {
-        return new NoteContentFragment();
-    }
+    private EditText noteTitle;
+    private EditText noteContent;
+    private BottomAppBar bar;
+    private Note note;
+    private View thisView;
+    private TextView repoMode;
 
     public static NoteContentFragment updateInstance(Note note) {
         NoteContentFragment fragment = new NoteContentFragment();
@@ -56,18 +63,40 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
         super(R.layout.fragment_notes_content);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        thisView = view;
         noteTitle = view.findViewById(R.id.txt_note_title);
         noteContent = view.findViewById(R.id.txt_note_content);
         fab = view.findViewById(R.id.fab);
-        if (getArguments() == null) {
-            presenter = new AddNotePresenter(this, NotesRepositoryBuffer.INSTANCE);
+
+        SharedPreferences mSettings = requireContext().getApplicationContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String repoType = mSettings.getString(APP_PREFERENCES_REPO_MODE, getString(R.string.rb_internal_notes));
+
+        if (repoType.equals(getString(R.string.rb_internal_notes))) {
+            if (getArguments() == null) {
+                presenter = new AddNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()));
+            } else {
+                note = getArguments().getParcelable(ARG_NOTE);
+                presenter = new UpdateNotePresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()), note);
+            }
+        } else if (repoType.equals(getString(R.string.rb_firestore))) {
+            if (getArguments() == null) {
+                presenter = new AddNotePresenter(this, FirestoreNotesRepository.INSTANCE);
+            } else {
+                note = getArguments().getParcelable(ARG_NOTE);
+                presenter = new UpdateNotePresenter(this, FirestoreNotesRepository.INSTANCE, note);
+            }
         } else {
-            note = getArguments().getParcelable(ARG_NOTE);
-            presenter = new UpdateNotePresenter(this, NotesRepositoryBuffer.INSTANCE, note);
+            if (getArguments() == null) {
+                presenter = new AddNotePresenter(this, NotesRepositoryBuffer.INSTANCE);
+            } else {
+                note = getArguments().getParcelable(ARG_NOTE);
+                presenter = new UpdateNotePresenter(this, NotesRepositoryBuffer.INSTANCE, note);
+            }
         }
 
         bar = view.findViewById(R.id.bar);
@@ -95,13 +124,18 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
             return false;
         });
 
-
         savingProgressBar = view.findViewById(R.id.saving_progress);
 
         fab.setOnClickListener(v -> {
             hideKeyboardFrom(requireContext(), noteTitle);
             hideKeyboardFrom(requireContext(), noteContent);
             presenter.onActionPressed(noteTitle.getText().toString(), noteContent.getText().toString());
+
+            if (getArguments() == null) {
+                showSnack(getString(R.string.message_new_note_added));
+            } else {
+                showSnack(getString(R.string.message_note_updated));
+            }
         });
     }
 
@@ -194,5 +228,12 @@ public class NoteContentFragment extends Fragment implements AddNoteView {
     public void actionCompleted(String key, Bundle bundle) {
         getParentFragmentManager()
                 .setFragmentResult(key, bundle);
+    }
+
+    private void showSnack(String message) {
+        Snackbar snackbar = Snackbar.make(thisView, message, Snackbar.LENGTH_SHORT);
+        snackbar.getView().setBackgroundColor(requireContext().getColor(R.color.note_title));
+        snackbar.setTextColor(requireContext().getColor(R.color.background_dark));
+        snackbar.show();
     }
 }

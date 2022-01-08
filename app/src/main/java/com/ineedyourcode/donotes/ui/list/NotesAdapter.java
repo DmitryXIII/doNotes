@@ -83,6 +83,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.NoteViewHold
         return index;
     }
 
+    public int updateItem(NoteAdapterItem adapterItem) {
+        int index = 0;
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i) instanceof NoteAdapterItem && ((NoteAdapterItem) data.get(i)).getNote().getId().equals(adapterItem.getNote().getId())) {
+                index = i;
+
+                break;
+            }
+        }
+        data.set(index, adapterItem);
+        return index;
+    }
+
     interface OnClick {
         void onClick(Note note);
 

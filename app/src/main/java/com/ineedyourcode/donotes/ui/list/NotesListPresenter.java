@@ -62,8 +62,6 @@ public class NotesListPresenter {
         view.onNoteAdded(adapterItem);
 
         view.hideEmpty();
-
-
     }
 
     public void removeItem(Note selectedNote) {
@@ -81,5 +79,10 @@ public class NotesListPresenter {
                 view.hideProgress();
             }
         });
+    }
+
+    public void onNoteUpdate(Note note) {
+        NoteAdapterItem adapterItem = new NoteAdapterItem(note, note.getTitle(), dateFormat.format(note.getCreatedAt()) + " " + timeFormat.format(note.getCreatedAt()));
+        view.onNoteUpdated(adapterItem);
     }
 }

@@ -1,6 +1,9 @@
 package com.ineedyourcode.donotes.ui.list;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
@@ -25,8 +29,10 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.ineedyourcode.donotes.R;
+import com.ineedyourcode.donotes.domain.firestore.FirestoreNotesRepository;
+import com.ineedyourcode.donotes.domain.internalrepo.InternalFileWriterRepository;
 import com.ineedyourcode.donotes.domain.Note;
-import com.ineedyourcode.donotes.domain.NotesRepositoryBuffer;
+import com.ineedyourcode.donotes.domain.randomrepo.NotesRepositoryBuffer;
 import com.ineedyourcode.donotes.ui.adapter.AdapterItem;
 import com.ineedyourcode.donotes.ui.adapter.NoteAdapterItem;
 import com.ineedyourcode.donotes.ui.bottombar.ToolbarSetter;
@@ -36,9 +42,12 @@ import com.ineedyourcode.donotes.ui.notecontent.NoteContentFragment;
 
 import java.util.List;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class NotesListFragment extends Fragment implements NotesListView {
     public static String ARG_NOTE = "ARG_NOTE";
     public static String RESULT_KEY = "NotesListFragment_RESULT";
+    private static final String APP_PREFERENCES = "SETTINGS";
+    private static final String APP_PREFERENCES_REPO_MODE = "REPO_MODE";
 
     private RecyclerView notesContainer;
     private NotesListPresenter presenter;
@@ -46,12 +55,24 @@ public class NotesListFragment extends Fragment implements NotesListView {
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView emptyMessage;
     private Note selectedNote;
+    private View thisView;
+    private String repoType;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = new NotesListPresenter(this, NotesRepositoryBuffer.INSTANCE);
+        SharedPreferences mSettings = requireContext().getApplicationContext().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        repoType = mSettings.getString(APP_PREFERENCES_REPO_MODE, getString(R.string.rb_internal_notes));
+
+        if (repoType.equals(getString(R.string.rb_internal_notes))) {
+            presenter = new NotesListPresenter(this, InternalFileWriterRepository.getINSTANCE(requireContext()));
+        } else if (repoType.equals(getString(R.string.rb_firestore))) {
+            presenter = new NotesListPresenter(this, FirestoreNotesRepository.INSTANCE);
+        } else {
+            presenter = new NotesListPresenter(this, NotesRepositoryBuffer.INSTANCE);
+        }
+
         adapter = new NotesAdapter(this);
         adapter.setOnClick(new NotesAdapter.OnClick() {
             @Override
@@ -79,6 +100,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        thisView = view;
 
         getParentFragmentManager()
                 .setFragmentResultListener(NoteContentFragment.KEY_RESULT, this, new FragmentResultListener() {
@@ -89,7 +111,26 @@ public class NotesListFragment extends Fragment implements NotesListView {
                             Toast.makeText(requireContext(), getString(R.string.delete_error_message), Toast.LENGTH_SHORT).show();
                         } else {
                             presenter.removeItem(selectedNote);
+                            showSnack(getString(R.string.note_deleted_message));
                         }
+                    }
+                });
+
+        getParentFragmentManager()
+                .setFragmentResultListener(AddNotePresenter.KEY, getViewLifecycleOwner(), new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                        Note note = result.getParcelable(AddNotePresenter.ARG_NOTE);
+                        presenter.onNoteAdded(note);
+                    }
+                });
+
+        getParentFragmentManager()
+                .setFragmentResultListener(UpdateNotePresenter.KEY, getViewLifecycleOwner(), new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                        Note note = result.getParcelable(UpdateNotePresenter.ARG_NOTE);
+                        presenter.onNoteUpdate(note);
                     }
                 });
 
@@ -165,25 +206,6 @@ public class NotesListFragment extends Fragment implements NotesListView {
         });
 
         presenter.requestNotes();
-
-        getParentFragmentManager()
-                .setFragmentResultListener(AddNotePresenter.KEY, getViewLifecycleOwner(), new FragmentResultListener() {
-                    @Override
-                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                        Note note = result.getParcelable(AddNotePresenter.ARG_NOTE);
-
-                        presenter.onNoteAdded(note);
-                    }
-                });
-
-        getParentFragmentManager()
-                .setFragmentResultListener(UpdateNotePresenter.KEY, getViewLifecycleOwner(), new FragmentResultListener() {
-                    @Override
-                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                        Note note = result.getParcelable(UpdateNotePresenter.ARG_NOTE);
-
-                    }
-                });
     }
 
     @Override
@@ -227,6 +249,13 @@ public class NotesListFragment extends Fragment implements NotesListView {
         adapter.notifyItemRemoved(index);
     }
 
+    @Override
+    public void onNoteUpdated(NoteAdapterItem adapterItem) {
+        int index = adapter.updateItem(adapterItem);
+
+        adapter.notifyItemChanged(index);
+    }
+
     private void showAlertFragmentDialog(String message) {
         AlertDialogFragment.newInstance(message)
                 .show(getParentFragmentManager(), AlertDialogFragment.getTAG());
@@ -245,9 +274,17 @@ public class NotesListFragment extends Fragment implements NotesListView {
         if (item.getItemId() == R.id.action_delete) {
             presenter.removeItem(selectedNote);
 
-            Toast.makeText(requireContext(), "Delete " + selectedNote.getTitle(), Toast.LENGTH_SHORT).show();
+            showSnack(getString(R.string.note_deleted_message));
+            return true;
         }
 
         return super.onContextItemSelected(item);
+    }
+
+    private void showSnack(String message) {
+        Snackbar snackbar = Snackbar.make(thisView, message, Snackbar.LENGTH_SHORT);
+        snackbar.getView().setBackgroundColor(requireContext().getColor(R.color.note_title));
+        snackbar.setTextColor(requireContext().getColor(R.color.background_dark));
+        snackbar.show();
     }
 }
