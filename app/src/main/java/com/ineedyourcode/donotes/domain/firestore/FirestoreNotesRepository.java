@@ -2,7 +2,9 @@ package com.ineedyourcode.donotes.domain.firestore;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,7 +39,7 @@ import java.util.Map;
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class FirestoreNotesRepository implements NotesRepository {
     public static final NotesRepository INSTANCE = new FirestoreNotesRepository();
-
+    private static final String TAG = "FirestoreNotesRepository";
     private static final String KEY_TITLE = "title";
     private static final String KEY_CONTENT = "content";
     private static final String KEY_CREATED_AT = "createdAt";
@@ -46,16 +48,18 @@ public class FirestoreNotesRepository implements NotesRepository {
     private static final String CHANNEL_ID = "CHANNEL_ID";
     private static final int NOTIFICATION_ID = 1;
 
+    private final Context context;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     FirestoreNotesRepository() {
+        context = DoNotesApp.getAppContext();
+
         NotificationChannelCompat channel = new NotificationChannelCompat.Builder(CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT)
                 .setDescription(DoNotesApp.getAppContext().getString(R.string.channel_description))
                 .setName(DoNotesApp.getAppContext().getString(R.string.channel_name))
                 .build();
 
-        NotificationManagerCompat.from(DoNotesApp.getAppContext()).createNotificationChannel(channel);
-        notifyMe();
+        NotificationManagerCompat.from(context).createNotificationChannel(channel);
     }
 
     @Override
@@ -67,16 +71,18 @@ public class FirestoreNotesRepository implements NotesRepository {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         List<DocumentSnapshot> documents = task.getResult().getDocuments();
                         ArrayList<Note> result = new ArrayList<>();
-
+                        ArrayList<String> idList = new ArrayList<>();
                         for (DocumentSnapshot document : documents) {
                             String id = document.getId();
                             String title = document.getString(KEY_TITLE);
                             String content = document.getString(KEY_CONTENT);
                             Date createdAt = document.getDate(KEY_CREATED_AT);
+                            idList.add(document.getId());
                             result.add(new Note(id, title, content, createdAt));
                         }
 
                         callback.onSuccess(result);
+                        notifyMe(idList);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -162,7 +168,7 @@ public class FirestoreNotesRepository implements NotesRepository {
                 });
     }
 
-    private void notifyMe() {
+    private void notifyMe(ArrayList<String> idList) {
         db.collection(COLLECTION_NOTES)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -170,15 +176,19 @@ public class FirestoreNotesRepository implements NotesRepository {
                                         @Nullable FirebaseFirestoreException e) {
                         String notifyMessage;
                         if (e != null) {
-                            System.out.println(DoNotesApp.getAppContext().getString(R.string.failed) + e);
+                            Log.e(TAG, e.toString());
                             return;
                         }
+
+                        List<DocumentSnapshot> documents = snapshots.getDocuments();
 
                         for (DocumentChange dc : snapshots.getDocumentChanges()) {
                             switch (dc.getType()) {
                                 case ADDED:
-                                    notifyMessage = DoNotesApp.getAppContext().getString(R.string.notification_new_note) + " \"" + dc.getDocument().getString(KEY_TITLE) + "\"";
-                                    showNotification(notifyMessage);
+                                    if (!idList.contains(dc.getDocument().getId())) {
+                                        notifyMessage = DoNotesApp.getAppContext().getString(R.string.notification_new_note) + " \"" + dc.getDocument().getString(KEY_TITLE) + "\"";
+                                        showNotification(notifyMessage);
+                                    }
                                     break;
                                 case MODIFIED:
                                     notifyMessage = DoNotesApp.getAppContext().getString(R.string.notification_note_edited) + " \"" + dc.getDocument().getString(KEY_TITLE) + "\"";
@@ -190,16 +200,15 @@ public class FirestoreNotesRepository implements NotesRepository {
                                     break;
                             }
                         }
-
                     }
                 });
     }
 
     private void showNotification(String message) {
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(DoNotesApp.getAppContext());
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-        Notification compat = new  NotificationCompat.Builder(DoNotesApp.getAppContext(), CHANNEL_ID)
+        Notification compat = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle(DoNotesApp.getAppContext().getString(R.string.notification_name))
                 .setContentText(message)
                 .setSmallIcon(R.drawable.app_icon)
